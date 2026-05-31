@@ -1,0 +1,61 @@
+"use client";
+
+import { Component, ReactNode } from "react";
+
+interface Props {
+  children: ReactNode;
+  fallback?: ReactNode;
+}
+
+interface State {
+  hasError: boolean;
+  error?: Error;
+}
+
+export class ErrorBoundary extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, info: { componentStack: string }) {
+    console.error("[ErrorBoundary]", error, info.componentStack);
+  }
+
+  handleReset = () => {
+    this.setState({ hasError: false, error: undefined });
+  };
+
+  render() {
+    if (this.state.hasError) {
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-amber-50 px-4">
+          <div className="text-center max-w-sm">
+            <div className="text-5xl mb-4">🐹</div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">
+              앗, 문제가 발생했어요
+            </h2>
+            <p className="text-gray-500 text-sm mb-6">
+              {this.state.error?.message ?? "예기치 못한 오류가 발생했습니다."}
+            </p>
+            <button
+              onClick={this.handleReset}
+              className="rounded-xl bg-amber-400 px-6 py-2 text-sm font-semibold text-white hover:bg-amber-500 transition-colors"
+            >
+              다시 시도하기
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
