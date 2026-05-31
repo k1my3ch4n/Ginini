@@ -82,40 +82,40 @@ _FSD: `features/convert-to-guinea`_
 
 ---
 
-### 🖼️ Feature 5: 변환 결과 화면
+### ✅ Feature 5: 변환 결과 화면
 
 _FSD: `features/convert-to-guinea/ui/ConversionResult.tsx`_
 
-- [ ] 원본 / 결과 이미지 비교 렌더링 (Before & After)
-- [ ] 결과 이미지 다운로드 기능 (`<a download>`)
-- [ ] 카카오톡 공유 버튼 (Kakao SDK)
-- [ ] 트위터/X 공유 버튼 (Web Intent URL)
-- [ ] "다시 변환하기" 버튼 → 스토어 `reset` + `step` → `'idle'`
+- [x] 원본 / 결과 이미지 비교 렌더링 (Before & After)
+- [x] 결과 이미지 다운로드 기능 (`<a download>`)
+- [x] 카카오톡 공유 버튼 (Kakao SDK)
+- [x] 트위터/X 공유 버튼 (Web Intent URL)
+- [x] "다시 변환하기" 버튼 → 스토어 `reset` + `step` → `'idle'`
 
 ---
 
-### 🧩 Feature 6: 컨버터 위젯 조립
+### ✅ Feature 6: 컨버터 위젯 조립
 
 _FSD: `widgets/converter`_
 
-- [ ] `ConverterWidget` - ImageUploader + ConversionResult 통합
-- [ ] `step` 상태에 따른 조건부 렌더링
+- [x] `ConverterWidget` - ImageUploader + ConversionResult 통합
+- [x] `step` 상태에 따른 조건부 렌더링
   - `idle / cropping` → 업로드 UI
   - `converting` → 로딩 UI
   - `done` → 결과 UI
   - `error` → 에러 UI + 재시도 버튼
-- [ ] 단계 전환 시 애니메이션 (framer-motion 또는 CSS transition)
+- [x] 단계 전환 시 애니메이션 (CSS fade-in keyframe)
 
 ---
 
-### 🏠 Feature 7: 홈페이지 완성
+### ✅ Feature 7: 홈페이지 완성
 
 _FSD: `views/home` + `app/page.tsx`_
 
-- [ ] 랜딩 헤더 (로고, 타이틀, 간단한 설명)
-- [ ] `ConverterWidget` 배치
-- [ ] 푸터 (저작권, 안내 문구)
-- [ ] 반응형 레이아웃 (모바일 우선)
+- [x] 랜딩 헤더 (로고, 타이틀, 간단한 설명)
+- [x] `ConverterWidget` 배치
+- [x] 푸터 (저작권, 안내 문구)
+- [x] 반응형 레이아웃 (모바일 우선)
 - [ ] OG 메타 태그 설정 (SNS 공유 썸네일)
 
 ---
