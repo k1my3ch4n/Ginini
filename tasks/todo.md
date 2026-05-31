@@ -27,13 +27,13 @@
 
 ---
 
-### 👉 Feature 1: 공통 UI 기반 (shared/ui) ← 다음 작업
-- [ ] `Button` 컴포넌트 (variant: primary / ghost / icon)
-- [ ] `Skeleton` 컴포넌트 (이미지 로딩 플레이스홀더)
-- [ ] `Toast` / 에러 알림 컴포넌트
-- [ ] `ProgressBar` 컴포넌트 (변환 진행률 표시)
-- [ ] `shared/api` - Axios 인스턴스 설정 (baseURL, 인터셉터)
-- [ ] `shared/lib` - 이미지 유틸 함수 (파일 크기/타입 검증, base64 변환)
+### ✅ Feature 1: 공통 UI 기반 (shared/ui)
+- [x] `Button` 컴포넌트 (variant: primary / ghost / icon)
+- [x] `Skeleton` 컴포넌트 (이미지 로딩 플레이스홀더)
+- [x] `Toast` / 에러 알림 컴포넌트 (`useToast` hook + `ToastContainer`)
+- [x] `ProgressBar` 컴포넌트 (변환 진행률 표시)
+- [x] `shared/api` - Axios 인스턴스 설정 (baseURL, 인터셉터)
+- [x] `shared/lib` - 이미지 유틸 함수 (파일 크기/타입 검증, base64 변환)
 
 ---
 
@@ -49,7 +49,7 @@ _FSD: `features/image-upload`_
 
 ---
 
-### 🗃️ Feature 3: 이미지 세션 상태 관리
+### 👉 Feature 3: 이미지 세션 상태 관리 ← 다음 작업
 _FSD: `entities/image-session/model/store.ts`_
 
 - [ ] Zustand 스토어 정의
