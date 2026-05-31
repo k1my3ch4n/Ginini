@@ -2,22 +2,23 @@
 
 ## ✅ 확정된 기술 스택
 
-| 항목 | 확정값 |
-|------|--------|
-| Framework | Next.js 16 (App Router) |
-| 스타일링 | Tailwind CSS v3 |
-| AI API | **미정** — 초기 mock으로 진행 |
-| 이미지 크롭 | react-image-crop |
-| Rate Limit | IP 기반 in-memory (추후 Upstash Redis) |
-| 배포 | Vercel |
-| SNS 공유 | 카카오톡 SDK + 트위터/X Web Intent |
-| 에러 처리 | ErrorBoundary + Toast |
+| 항목        | 확정값                                 |
+| ----------- | -------------------------------------- |
+| Framework   | Next.js 16 (App Router)                |
+| 스타일링    | Tailwind CSS v3                        |
+| AI API      | **미정** — 초기 mock으로 진행          |
+| 이미지 크롭 | react-image-crop                       |
+| Rate Limit  | IP 기반 in-memory (추후 Upstash Redis) |
+| 배포        | Vercel                                 |
+| SNS 공유    | 카카오톡 SDK + 트위터/X Web Intent     |
+| 에러 처리   | ErrorBoundary + Toast                  |
 
 ---
 
 ## 📋 기능별 Todo List
 
 ### ✅ Feature 0: 프로젝트 초기 설정
+
 - [x] Next.js 16.2.6 + TypeScript 프로젝트 생성
 - [x] 의존성 설치 (Tailwind CSS, Zustand, TanStack Query, Axios, react-image-crop)
 - [x] FSD 디렉토리 골격 생성 (`views`, `widgets`, `features`, `entities`, `shared`) — `pages`→`views` 변경 (Next.js 충돌 방지)
@@ -28,6 +29,7 @@
 ---
 
 ### ✅ Feature 1: 공통 UI 기반 (shared/ui)
+
 - [x] `Button` 컴포넌트 (variant: primary / ghost / icon)
 - [x] `Skeleton` 컴포넌트 (이미지 로딩 플레이스홀더)
 - [x] `Toast` / 에러 알림 컴포넌트 (`useToast` hook + `ToastContainer`)
@@ -38,6 +40,7 @@
 ---
 
 ### ✅ Feature 2: 이미지 업로드
+
 _FSD: `features/image-upload`_
 
 - [x] 드래그앤드롭 업로드 영역 UI (`ImageDropZone`)
@@ -50,6 +53,7 @@ _FSD: `features/image-upload`_
 ---
 
 ### ✅ Feature 3: 이미지 세션 상태 관리
+
 _FSD: `entities/image-session/model/store.ts`_
 
 - [x] Zustand 스토어 정의
@@ -62,22 +66,24 @@ _FSD: `entities/image-session/model/store.ts`_
 
 ---
 
-### 🤖 Feature 4: AI 변환 연동
+### ✅ Feature 4: AI 변환 연동
+
 _FSD: `features/convert-to-guinea`_
 
-- [ ] 백엔드 프록시 API 라우트 구현 (`app/api/convert/route.ts`)
-  - AI API 호출 (fal.ai 또는 Replicate)
-  - API Key 서버사이드 보호
-- [ ] Rate Limit 미들웨어 (IP 기준, 예: 분당 3회)
-- [ ] `useConvertImage` TanStack Query `useMutation` 훅
+- [x] 백엔드 프록시 API 라우트 구현 (`app/api/convert/route.ts`)
+  - AI API 호출 (현재 mock — 2초 지연 + placeholder URL, 추후 fal.ai/Replicate 교체)
+  - API Key 서버사이드 보호 구조 완비
+- [x] Rate Limit 미들웨어 (IP 기준, 분당 3회, in-memory Map)
+- [x] `useConvertImage` TanStack Query `useMutation` 훅
   - 요청 시 `step` → `'converting'`
   - 성공 시 `resultImage` 저장 → `step` → `'done'`
   - 실패 시 `step` → `'error'` + 에러 토스트
-- [ ] 변환 중 프로그레스 애니메이션 / 로딩 UI
+- [x] 변환 중 프로그레스 애니메이션 / 로딩 UI (`ConvertingLoader`)
 
 ---
 
 ### 🖼️ Feature 5: 변환 결과 화면
+
 _FSD: `features/convert-to-guinea/ui/ConversionResult.tsx`_
 
 - [ ] 원본 / 결과 이미지 비교 렌더링 (Before & After)
@@ -89,6 +95,7 @@ _FSD: `features/convert-to-guinea/ui/ConversionResult.tsx`_
 ---
 
 ### 🧩 Feature 6: 컨버터 위젯 조립
+
 _FSD: `widgets/converter`_
 
 - [ ] `ConverterWidget` - ImageUploader + ConversionResult 통합
@@ -102,6 +109,7 @@ _FSD: `widgets/converter`_
 ---
 
 ### 🏠 Feature 7: 홈페이지 완성
+
 _FSD: `views/home` + `app/page.tsx`_
 
 - [ ] 랜딩 헤더 (로고, 타이틀, 간단한 설명)
@@ -113,6 +121,7 @@ _FSD: `views/home` + `app/page.tsx`_
 ---
 
 ### 🛡️ Feature 8: 품질 및 배포
+
 - [ ] `ErrorBoundary` 전역 에러 처리
 - [ ] SEO 메타 태그 (`next/metadata`)
 - [ ] 오픈그래프 이미지 생성 (`app/opengraph-image.tsx`)
