@@ -116,15 +116,15 @@ _FSD: `views/home` + `app/page.tsx`_
 - [x] `ConverterWidget` 배치
 - [x] 푸터 (저작권, 안내 문구)
 - [x] 반응형 레이아웃 (모바일 우선)
-- [ ] OG 메타 태그 설정 (SNS 공유 썸네일)
+- [x] OG 메타 태그 설정 (SNS 공유 썸네일)
 
 ---
 
 ### 🛡️ Feature 8: 품질 및 배포
 
-- [ ] `ErrorBoundary` 전역 에러 처리
-- [ ] SEO 메타 태그 (`next/metadata`)
-- [ ] 오픈그래프 이미지 생성 (`app/opengraph-image.tsx`)
+- [x] `ErrorBoundary` 전역 에러 처리
+- [x] SEO 메타 태그 (`next/metadata`)
+- [x] 오픈그래프 이미지 생성 (`app/opengraph-image.tsx`)
 - [ ] Vercel 배포 설정 (`vercel.json`, 환경 변수 등록)
 - [ ] 라이트하우스 성능 체크 (목표: LCP < 2.5s)
 
