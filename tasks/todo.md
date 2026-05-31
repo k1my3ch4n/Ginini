@@ -37,28 +37,28 @@
 
 ---
 
-### 📸 Feature 2: 이미지 업로드
+### ✅ Feature 2: 이미지 업로드
 _FSD: `features/image-upload`_
 
-- [ ] 드래그앤드롭 업로드 영역 UI (`ImageDropZone`)
-- [ ] 클릭으로 파일 선택 기능
-- [ ] 이미지 파일 유효성 검사 (jpg/png/webp, 최대 10MB)
-- [ ] 이미지 미리보기 렌더링
-- [ ] 이미지 크롭 모달 (`react-image-crop` 연동)
-- [ ] 크롭 완료 → Blob/DataURL 추출 후 스토어 저장
+- [x] 드래그앤드롭 업로드 영역 UI (`ImageDropZone`)
+- [x] 클릭으로 파일 선택 기능
+- [x] 이미지 파일 유효성 검사 (jpg/png/webp, 최대 10MB)
+- [x] 이미지 미리보기 렌더링 (`ImagePreview` — 크롭 수정/다시 선택 포함)
+- [x] 이미지 크롭 모달 (`react-image-crop` 연동)
+- [x] 크롭 완료 → Blob/DataURL 추출 후 스토어 저장
 
 ---
 
-### 👉 Feature 3: 이미지 세션 상태 관리 ← 다음 작업
+### ✅ Feature 3: 이미지 세션 상태 관리
 _FSD: `entities/image-session/model/store.ts`_
 
-- [ ] Zustand 스토어 정의
+- [x] Zustand 스토어 정의
   - `step`: `'idle' | 'cropping' | 'converting' | 'done' | 'error'`
   - `uploadedImage`: 원본 이미지 DataURL
   - `croppedImage`: 크롭된 이미지 Blob
   - `resultImage`: AI 변환 결과 URL
-- [ ] 단계 전환 액션 (`setStep`, `reset`)
-- [ ] 이미지 저장/초기화 액션
+- [x] 단계 전환 액션 (`setStep`, `reset`)
+- [x] 이미지 저장/초기화 액션
 
 ---
 
