@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
-import { ToastContainer } from "@shared/ui";
+import { ToastContainer, Providers } from "@shared/ui";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,8 +30,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        {children}
-        <ToastContainer />
+        <Providers>
+          {children}
+          <ToastContainer />
+        </Providers>
         <Script
           src="https://t1.kakaocdn.net/kakaojs/2.7.4/kakao.min.js"
           strategy="lazyOnload"
