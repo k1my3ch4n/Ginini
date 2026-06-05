@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useImageSessionStore } from "@entities/image-session";
 import { Button } from "@shared/ui";
 
@@ -8,16 +8,19 @@ export function ImagePreview() {
   const { croppedImage, uploadedImage, reset, setStep } =
     useImageSessionStore();
 
-  const previewURL = useMemo(
-    () => (croppedImage ? URL.createObjectURL(croppedImage) : null),
-    [croppedImage],
-  );
+  const [previewURL, setPreviewURL] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!croppedImage) {
+      setPreviewURL(null);
+      return;
+    }
+    const url = URL.createObjectURL(croppedImage);
+    setPreviewURL(url);
     return () => {
-      if (previewURL) URL.revokeObjectURL(previewURL);
+      URL.revokeObjectURL(url);
     };
-  }, [previewURL]);
+  }, [croppedImage]);
 
   if (!previewURL) {
     return null;

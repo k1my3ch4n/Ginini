@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useImageSessionStore } from "@entities/image-session";
 import { Button } from "@shared/ui";
 import { shareToKakao } from "@shared/lib/kakao";
@@ -25,6 +26,16 @@ async function downloadImage(url: string, filename: string) {
 
 export function ConversionResult() {
   const { uploadedImage, resultImage, reset } = useImageSessionStore();
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsLightboxOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isLightboxOpen]);
 
   const handleDownload = () => {
     if (!resultImage) return;
@@ -82,7 +93,8 @@ export function ConversionResult() {
             <img
               src={resultImage}
               alt="기니피그 변환 결과"
-              className="w-full aspect-square object-cover rounded-2xl border-2 border-amber-300 shadow-md"
+              onClick={() => setIsLightboxOpen(true)}
+              className="w-full aspect-square object-cover rounded-2xl border-2 border-amber-300 shadow-md cursor-zoom-in"
             />
           ) : (
             <div className="w-full aspect-square rounded-2xl bg-amber-50" />
@@ -123,6 +135,27 @@ export function ConversionResult() {
           다시 변환하기
         </Button>
       </div>
+
+      {isLightboxOpen && resultImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          onClick={() => setIsLightboxOpen(false)}
+        >
+          <img
+            src={resultImage}
+            alt="기니피그 변환 결과 (크게 보기)"
+            className="max-w-full max-h-full rounded-2xl shadow-2xl object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <button
+            onClick={() => setIsLightboxOpen(false)}
+            className="absolute top-4 right-4 text-white text-3xl leading-none hover:opacity-70"
+            aria-label="닫기"
+          >
+            ×
+          </button>
+        </div>
+      )}
     </div>
   );
 }
