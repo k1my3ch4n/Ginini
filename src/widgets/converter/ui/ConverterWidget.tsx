@@ -9,17 +9,16 @@ import {
 import {
   ConvertingLoader,
   ConversionResult,
-  useConvertImage,
+  StyleSelectModal,
 } from "@features/convert-to-guinea";
 import { Button } from "@shared/ui";
 
 export function ConverterWidget() {
-  const { step, croppedImage, reset } = useImageSessionStore();
-  const { mutate: convert } = useConvertImage();
+  const { step, croppedImage, reset, setStep } = useImageSessionStore();
 
   const handleConvert = () => {
     if (croppedImage) {
-      convert(croppedImage);
+      setStep("style-select");
     }
   };
 
@@ -55,6 +54,7 @@ export function ConverterWidget() {
   return (
     <div className="animate-fade-in w-full">
       {step === "cropping" && <ImageCropModal />}
+      {step === "style-select" && <StyleSelectModal />}
       {croppedImage ? (
         <div className="flex flex-col items-center gap-5">
           <ImagePreview />
