@@ -1,33 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useImageSessionStore } from "@entities/image-session";
 import { Button } from "@shared/ui";
 import { shareToKakao } from "@shared/lib/kakao";
+import { useToast } from "@shared/model";
 
-async function downloadImage(url: string, filename: string) {
-  try {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    const blobUrl = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = blobUrl;
-    link.download = filename;
-    link.click();
-    URL.revokeObjectURL(blobUrl);
-  } catch {
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    link.target = "_blank";
-    link.click();
-  }
+async function downloadImage(url: string, filename: string): Promise<void> {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("fetch failed");
+  const blob = await response.blob();
+  const blobUrl = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = blobUrl;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(blobUrl);
 }
 
 export function ConversionResult() {
   const { uploadedImage, resultImage, animalTrait, reset } =
     useImageSessionStore();
   const [isLightboxOpen, setIsLightboxOpen] = useState(true);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const { success, error: showError } = useToast();
 
   useEffect(() => {
     if (!isLightboxOpen) return;
@@ -38,16 +34,26 @@ export function ConversionResult() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isLightboxOpen]);
 
+  useEffect(() => {
+    if (isLightboxOpen) closeButtonRef.current?.focus();
+  }, [isLightboxOpen]);
+
   const title = animalTrait ? `${animalTrait} 기니피그` : "기니피그";
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!resultImage) return;
-    downloadImage(resultImage, "guinea-pig-me.png");
+    try {
+      await downloadImage(resultImage, "guinea-pig-me.png");
+      success("이미지를 저장했어요!");
+    } catch {
+      showError("저장에 실패했어요. 다시 시도해 주세요.");
+    }
   };
 
   const handleKakaoShare = () => {
     if (!resultImage) return;
     shareToKakao(resultImage);
+    success("카카오톡 공유를 시작했어요!");
   };
 
   const handleTwitterShare = () => {
@@ -58,18 +64,25 @@ export function ConversionResult() {
       "_blank",
       "noopener,noreferrer",
     );
+    success("트위터 공유 창을 열었어요!");
   };
 
   /* ── 전체화면 라이트박스 ── */
   if (isLightboxOpen && resultImage) {
     return (
-      <div className="fixed inset-0 z-50 flex flex-col bg-black/90">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="lightbox-title"
+        className="fixed inset-0 z-50 flex flex-col bg-black/90"
+      >
         {/* 닫기 버튼 */}
         <div className="flex justify-end px-5 pt-12">
           <button
+            ref={closeButtonRef}
             onClick={() => setIsLightboxOpen(false)}
-            className="text-white/60 hover:text-white text-2xl leading-none transition-colors"
-            aria-label="닫기"
+            className="text-white/60 hover:text-white text-2xl leading-none transition-colors cursor-pointer"
+            aria-label="라이트박스 닫기"
           >
             ✕
           </button>
@@ -86,23 +99,23 @@ export function ConversionResult() {
 
         {/* 타이틀 + 액션 */}
         <div className="px-5 pb-10 flex flex-col items-center gap-4">
-          <p className="text-white font-bold text-lg">{title}</p>
+          <p id="lightbox-title" className="text-white font-bold text-lg">{title}</p>
           <div className="flex gap-3 w-full max-w-xs">
             <button
               onClick={handleDownload}
-              className="flex-1 py-3 rounded-2xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 active:scale-95 transition-all"
+              className="flex-1 py-3 rounded-2xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
             >
               저장
             </button>
             <button
               onClick={handleKakaoShare}
-              className="flex-[2] py-3 rounded-2xl bg-amber-400 text-white text-sm font-semibold hover:bg-amber-500 active:scale-95 transition-all"
+              className="flex-[2] py-3 rounded-2xl bg-amber-400 text-white text-sm font-semibold hover:bg-amber-500 active:scale-95 transition-all cursor-pointer"
             >
               공유
             </button>
             <button
               onClick={reset}
-              className="flex-1 py-3 rounded-2xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 active:scale-95 transition-all"
+              className="flex-1 py-3 rounded-2xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
             >
               다시
             </button>
@@ -143,12 +156,17 @@ export function ConversionResult() {
             After 🐹
           </span>
           {resultImage ? (
-            <img
-              src={resultImage}
-              alt="기니피그 변환 결과"
+            <button
               onClick={() => setIsLightboxOpen(true)}
-              className="w-full aspect-square object-cover rounded-2xl border-2 border-amber-300 shadow-md cursor-zoom-in"
-            />
+              aria-label="결과 이미지 크게 보기"
+              className="w-full aspect-square overflow-hidden rounded-2xl border-2 border-amber-300 shadow-md cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+            >
+              <img
+                src={resultImage}
+                alt="기니피그 변환 결과"
+                className="w-full h-full object-cover"
+              />
+            </button>
           ) : (
             <div className="w-full aspect-square rounded-2xl bg-amber-50" />
           )}

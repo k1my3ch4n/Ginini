@@ -39,7 +39,8 @@ export function UploadScreen() {
       <div className="flex items-center mb-8">
         <button
           onClick={() => setStep("idle")}
-          className="text-gray-400 hover:text-gray-600 transition-colors text-xl leading-none mr-3"
+          aria-label="뒤로 가기"
+          className="text-gray-400 hover:text-gray-600 transition-colors text-xl leading-none mr-3 cursor-pointer"
         >
           &#8249;
         </button>
@@ -67,7 +68,7 @@ export function UploadScreen() {
       <div className="flex flex-col gap-4 flex-1 justify-center">
         <button
           onClick={() => cameraRef.current?.click()}
-          className="flex flex-col items-center justify-center gap-3 w-full py-12 rounded-2xl bg-white border border-gray-100 shadow-sm hover:border-amber-300 hover:bg-amber-50 active:scale-95 transition-all"
+          className="flex flex-col items-center justify-center gap-3 w-full py-12 rounded-2xl bg-white border border-gray-100 shadow-sm hover:border-amber-300 hover:bg-amber-50 active:scale-95 transition-all cursor-pointer"
         >
           <CameraIcon className="w-10 h-10 text-gray-400" />
           <span className="text-sm font-medium text-gray-700">사진 촬영하기</span>
@@ -75,7 +76,7 @@ export function UploadScreen() {
 
         <button
           onClick={() => albumRef.current?.click()}
-          className="flex flex-col items-center justify-center gap-3 w-full py-12 rounded-2xl bg-white border border-gray-100 shadow-sm hover:border-amber-300 hover:bg-amber-50 active:scale-95 transition-all"
+          className="flex flex-col items-center justify-center gap-3 w-full py-12 rounded-2xl bg-white border border-gray-100 shadow-sm hover:border-amber-300 hover:bg-amber-50 active:scale-95 transition-all cursor-pointer"
         >
           <AlbumIcon className="w-10 h-10 text-gray-400" />
           <span className="text-sm font-medium text-gray-700">앨범에서 선택</span>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ReactCrop, { type Crop, type PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { useImageSessionStore } from "@entities/image-session";
@@ -40,6 +40,7 @@ async function getCroppedBlob(
 export function ImageCropModal() {
   const { uploadedImage, setCroppedImage, setStep } = useImageSessionStore();
   const imgRef = useRef<HTMLImageElement>(null);
+  const confirmRef = useRef<HTMLButtonElement>(null);
   const [crop, setCrop] = useState<Crop>({
     unit: "%",
     x: 15,
@@ -49,6 +50,10 @@ export function ImageCropModal() {
   });
   const [completedCrop, setCompletedCrop] = useState<PixelCrop | null>(null);
   const { error: showError } = useToast();
+
+  useEffect(() => {
+    confirmRef.current?.focus();
+  }, []);
 
   const onImageLoad = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -93,16 +98,22 @@ export function ImageCropModal() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-black">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="crop-dialog-title"
+      className="fixed inset-0 z-50 flex flex-col bg-black"
+    >
       {/* 상단 타이틀 */}
       <div className="flex items-center px-5 pt-12 pb-4">
         <button
           onClick={() => setStep("upload")}
-          className="text-white/60 hover:text-white transition-colors text-xl leading-none mr-3"
+          aria-label="뒤로 가기"
+          className="text-white/60 hover:text-white transition-colors text-xl leading-none mr-3 cursor-pointer"
         >
           &#8249;
         </button>
-        <h2 className="text-white text-base font-semibold">동그랗게 맞추기</h2>
+        <h2 id="crop-dialog-title" className="text-white text-base font-semibold">동그랗게 맞추기</h2>
       </div>
 
       {/* 크롭 영역 — 화면을 가득 채우고 원형 컷아웃 효과 */}
@@ -136,13 +147,14 @@ export function ImageCropModal() {
         <div className="flex gap-3">
           <button
             onClick={() => setStep("upload")}
-            className="flex-1 py-3 rounded-2xl border border-white/20 text-white/70 text-sm font-medium hover:bg-white/10 transition-colors"
+            className="flex-1 py-3 rounded-2xl border border-white/20 text-white/70 text-sm font-medium hover:bg-white/10 transition-colors cursor-pointer"
           >
             다시 선택
           </button>
           <button
+            ref={confirmRef}
             onClick={handleConfirm}
-            className="flex-2 flex-[2] py-3 rounded-2xl bg-amber-400 text-white text-sm font-semibold hover:bg-amber-500 active:scale-95 transition-all"
+            className="flex-2 flex-[2] py-3 rounded-2xl bg-amber-400 text-white text-sm font-semibold hover:bg-amber-500 active:scale-95 transition-all cursor-pointer"
           >
             확인
           </button>

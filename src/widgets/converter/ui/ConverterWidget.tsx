@@ -34,7 +34,7 @@ export function ConverterWidget() {
 
   if (step === "error") {
     return (
-      <div className="flex flex-col items-center gap-4 py-12 px-4 min-h-screen bg-[#faf7f2] justify-center">
+      <div role="alert" className="flex flex-col items-center gap-4 py-12 px-4 min-h-screen bg-[#faf7f2] justify-center">
         <div className="text-5xl">😢</div>
         <p className="text-lg font-semibold text-gray-800">
           변환 중 오류가 발생했어요
@@ -67,7 +67,7 @@ export function ConverterWidget() {
       {/* 주 CTA */}
       <button
         onClick={() => setStep("upload")}
-        className="w-full max-w-xs py-4 rounded-2xl bg-amber-400 text-white font-semibold text-base hover:bg-amber-500 active:scale-95 transition-all shadow-sm mb-3"
+        className="w-full max-w-xs py-4 rounded-2xl bg-amber-400 text-white font-semibold text-base hover:bg-amber-500 active:scale-95 transition-all shadow-sm mb-3 cursor-pointer"
       >
         좋아, 시작!
       </button>
@@ -75,7 +75,7 @@ export function ConverterWidget() {
       {/* 보조 버튼 */}
       <button
         onClick={() => setStep("upload")}
-        className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+        className="text-sm text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
       >
         예시 먼저 볼래
       </button>

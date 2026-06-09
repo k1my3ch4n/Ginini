@@ -59,20 +59,26 @@ export function AnimalSelectModal() {
   };
 
   return (
-    <div className="flex flex-col w-full min-h-screen bg-[#faf7f2] px-5 pt-6 pb-10">
+    <form
+      onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}
+      className="flex flex-col w-full min-h-screen bg-[#faf7f2] px-5 pt-6 pb-10"
+    >
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-6">
         <button
+          type="button"
           onClick={() => setStep("cropping")}
-          className="text-gray-400 hover:text-gray-600 transition-colors text-sm flex items-center gap-1"
+          aria-label="뒤로 가기"
+          className="text-gray-400 hover:text-gray-600 transition-colors text-sm flex items-center gap-1 cursor-pointer"
         >
           <span>&#8249;</span>
         </button>
         <h2 className="text-base font-semibold text-gray-800">닮은꼴 고르기</h2>
         <button
+          type="button"
           onClick={handleSkip}
           disabled={isPending}
-          className="text-sm text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-40"
+          className="text-sm text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >
           건너뛰기
         </button>
@@ -100,9 +106,11 @@ export function AnimalSelectModal() {
         {ANIMAL_CHIPS.map((chip) => (
           <button
             key={chip}
+            type="button"
             onClick={() => handleChipClick(chip)}
+            aria-pressed={selected === chip}
             className={[
-              "px-4 py-2 rounded-full text-sm font-medium border transition-all",
+              "px-4 py-2 rounded-full text-sm font-medium border transition-all cursor-pointer",
               selected === chip
                 ? "bg-amber-400 border-amber-400 text-white shadow-sm"
                 : "bg-white border-gray-200 text-gray-700 hover:border-amber-300 hover:bg-amber-50",
@@ -115,7 +123,11 @@ export function AnimalSelectModal() {
 
       {/* 직접 입력 */}
       <div className="mb-8">
+        <label htmlFor="animal-custom-input" className="sr-only">
+          닮은꼴 직접 입력
+        </label>
         <input
+          id="animal-custom-input"
           ref={inputRef}
           type="text"
           value={customInput}
@@ -128,12 +140,12 @@ export function AnimalSelectModal() {
 
       {/* 완성하기 버튼 */}
       <button
-        onClick={handleSubmit}
+        type="submit"
         disabled={isPending}
-        className="w-full py-4 rounded-2xl bg-amber-400 text-white font-semibold text-base hover:bg-amber-500 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+        className="w-full py-4 rounded-2xl bg-amber-400 text-white font-semibold text-base hover:bg-amber-500 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
       >
         {isPending ? "변환 중..." : "완성하기"}
       </button>
-    </div>
+    </form>
   );
 }

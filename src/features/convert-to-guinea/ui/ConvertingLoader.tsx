@@ -27,19 +27,35 @@ export function ConvertingLoader() {
   const messageIndex = Math.min(Math.floor(progress / 20), MESSAGES.length - 1);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-6 min-h-screen bg-[#faf7f2] px-8">
+    <div
+      role="status"
+      aria-label="기니피그 변환 중"
+      className="flex flex-col items-center justify-center gap-6 min-h-screen bg-[#faf7f2] px-8"
+    >
       {/* Ring spinner */}
-      <div className="w-16 h-16 rounded-full border-4 border-gray-200 border-t-amber-400 animate-spin" />
+      <div
+        aria-hidden="true"
+        className="w-16 h-16 rounded-full border-4 border-gray-200 border-t-amber-400 animate-spin"
+      />
 
       {/* 메시지 */}
       <div className="text-center">
         <p className="text-lg font-semibold text-gray-800 mb-1">
           기니피그 굽는 중...
         </p>
-        <p className="text-3xl font-bold text-amber-400 my-2">
+        <p
+          role="progressbar"
+          aria-valuenow={Math.round(progress)}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label="변환 진행률"
+          className="text-3xl font-bold text-amber-400 my-2"
+        >
           {Math.round(progress)}%
         </p>
-        <p className="text-sm text-gray-400">{MESSAGES[messageIndex]}</p>
+        <p aria-live="polite" className="text-sm text-gray-400">
+          {MESSAGES[messageIndex]}
+        </p>
       </div>
     </div>
   );
