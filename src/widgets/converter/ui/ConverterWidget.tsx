@@ -1,46 +1,40 @@
 "use client";
 
 import { useImageSessionStore } from "@entities/image-session";
-import {
-  ImageDropZone,
-  ImageCropModal,
-  ImagePreview,
-} from "@features/image-upload";
+import { UploadScreen, ImageCropModal } from "@features/image-upload";
 import {
   ConvertingLoader,
   ConversionResult,
-  StyleSelectModal,
+  AnimalSelectModal,
 } from "@features/convert-to-guinea";
 import { Button } from "@shared/ui";
 
 export function ConverterWidget() {
-  const { step, croppedImage, reset, setStep } = useImageSessionStore();
+  const { step, setStep, reset } = useImageSessionStore();
 
-  const handleConvert = () => {
-    if (croppedImage) {
-      setStep("style-select");
-    }
-  };
+  if (step === "upload") {
+    return <UploadScreen />;
+  }
+
+  if (step === "cropping") {
+    return <ImageCropModal />;
+  }
+
+  if (step === "animal-select") {
+    return <AnimalSelectModal />;
+  }
 
   if (step === "converting") {
-    return (
-      <div className="animate-fade-in">
-        <ConvertingLoader />
-      </div>
-    );
+    return <ConvertingLoader />;
   }
 
   if (step === "done") {
-    return (
-      <div className="animate-fade-in">
-        <ConversionResult />
-      </div>
-    );
+    return <ConversionResult />;
   }
 
   if (step === "error") {
     return (
-      <div className="animate-fade-in flex flex-col items-center gap-4 py-12 px-4">
+      <div className="flex flex-col items-center gap-4 py-12 px-4 min-h-screen bg-[#faf7f2] justify-center">
         <div className="text-5xl">😢</div>
         <p className="text-lg font-semibold text-gray-800">
           변환 중 오류가 발생했어요
@@ -51,20 +45,40 @@ export function ConverterWidget() {
     );
   }
 
+  /* step === 'idle' — 랜딩 화면 (마스코트 대화형) */
   return (
-    <div className="animate-fade-in w-full">
-      {step === "cropping" && <ImageCropModal />}
-      {step === "style-select" && <StyleSelectModal />}
-      {croppedImage ? (
-        <div className="flex flex-col items-center gap-5">
-          <ImagePreview />
-          <Button size="md" onClick={handleConvert} className="w-full max-w-xs">
-            🐹 기니피그로 변환하기
-          </Button>
-        </div>
-      ) : (
-        <ImageDropZone />
-      )}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#faf7f2] px-6 py-12">
+      {/* 마스코트 */}
+      <div className="text-8xl mb-4 select-none">🐹</div>
+
+      {/* 말풍선 */}
+      <div className="relative bg-white rounded-2xl px-6 py-4 shadow-sm mb-8 max-w-xs text-center">
+        <p className="text-gray-800 font-semibold text-base leading-snug">
+          내 닮은꼴 기니피그,
+          <br />
+          만들어볼래?
+        </p>
+        {/* 말풍선 꼬리 */}
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-white text-xl leading-none drop-shadow-sm select-none">
+          ▲
+        </span>
+      </div>
+
+      {/* 주 CTA */}
+      <button
+        onClick={() => setStep("upload")}
+        className="w-full max-w-xs py-4 rounded-2xl bg-amber-400 text-white font-semibold text-base hover:bg-amber-500 active:scale-95 transition-all shadow-sm mb-3"
+      >
+        좋아, 시작!
+      </button>
+
+      {/* 보조 버튼 */}
+      <button
+        onClick={() => setStep("upload")}
+        className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+      >
+        예시 먼저 볼래
+      </button>
     </div>
   );
 }

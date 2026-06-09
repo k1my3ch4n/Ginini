@@ -4,7 +4,6 @@ import { useCallback, useRef, useState } from "react";
 import ReactCrop, { type Crop, type PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { useImageSessionStore } from "@entities/image-session";
-import { Button } from "@shared/ui";
 import { useToast } from "@shared/model";
 
 async function getCroppedBlob(
@@ -43,10 +42,10 @@ export function ImageCropModal() {
   const imgRef = useRef<HTMLImageElement>(null);
   const [crop, setCrop] = useState<Crop>({
     unit: "%",
-    x: 10,
-    y: 10,
-    width: 80,
-    height: 80,
+    x: 15,
+    y: 15,
+    width: 70,
+    height: 70,
   });
   const [completedCrop, setCompletedCrop] = useState<PixelCrop | null>(null);
   const { error: showError } = useToast();
@@ -54,12 +53,22 @@ export function ImageCropModal() {
   const onImageLoad = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement>) => {
       const { width, height } = e.currentTarget;
+      const size = Math.min(width, height) * 0.7;
+      const x = (width - size) / 2;
+      const y = (height - size) / 2;
       setCompletedCrop({
         unit: "px",
-        x: Math.round(width * 0.1),
-        y: Math.round(height * 0.1),
-        width: Math.round(width * 0.8),
-        height: Math.round(height * 0.8),
+        x: Math.round(x),
+        y: Math.round(y),
+        width: Math.round(size),
+        height: Math.round(size),
+      });
+      setCrop({
+        unit: "px",
+        x: Math.round(x),
+        y: Math.round(y),
+        width: Math.round(size),
+        height: Math.round(size),
       });
     },
     [],
@@ -73,52 +82,70 @@ export function ImageCropModal() {
     try {
       const blob = await getCroppedBlob(imgRef.current, completedCrop);
       setCroppedImage(blob);
-      setStep("idle");
+      setStep("animal-select");
     } catch {
       showError("크롭 처리 중 오류가 발생했습니다.");
     }
   }, [completedCrop, setCroppedImage, setStep, showError]);
-
-  const handleCancel = useCallback(() => {
-    setStep("idle");
-  }, [setStep]);
 
   if (!uploadedImage) {
     return null;
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div className="flex flex-col gap-5 w-full max-w-lg bg-white rounded-2xl p-6 shadow-2xl">
-        <h2 className="text-lg font-semibold text-zinc-800">이미지 크롭</h2>
-        <div className="flex items-center justify-center overflow-auto rounded-xl bg-zinc-100 max-h-[60vh]">
-          <ReactCrop
-            crop={crop}
-            onChange={(_, percentCrop) => setCrop(percentCrop)}
-            onComplete={(c) => setCompletedCrop(c)}
-            minWidth={50}
-            minHeight={50}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element -- react-image-crop requires a plain <img> ref for canvas coordinate calculation */}
-            <img
-              ref={imgRef}
-              src={uploadedImage}
-              alt="크롭할 이미지"
-              className="max-w-full max-h-[55vh] object-contain block"
-              onLoad={onImageLoad}
-            />
-          </ReactCrop>
-        </div>
-        <p className="text-sm text-zinc-500">
-          원하는 영역을 선택하세요. 선택하지 않으면 전체 이미지가 사용됩니다.
+    <div className="fixed inset-0 z-50 flex flex-col bg-black">
+      {/* 상단 타이틀 */}
+      <div className="flex items-center px-5 pt-12 pb-4">
+        <button
+          onClick={() => setStep("upload")}
+          className="text-white/60 hover:text-white transition-colors text-xl leading-none mr-3"
+        >
+          &#8249;
+        </button>
+        <h2 className="text-white text-base font-semibold">동그랗게 맞추기</h2>
+      </div>
+
+      {/* 크롭 영역 — 화면을 가득 채우고 원형 컷아웃 효과 */}
+      <div className="flex-1 flex items-center justify-center overflow-hidden crop-fullscreen">
+        <ReactCrop
+          crop={crop}
+          onChange={(c) => setCrop(c)}
+          onComplete={(c) => setCompletedCrop(c)}
+          circularCrop
+          aspect={1}
+          minWidth={80}
+          minHeight={80}
+          className="max-h-full"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            ref={imgRef}
+            src={uploadedImage}
+            alt="크롭할 이미지"
+            className="max-w-full max-h-[calc(100vh-180px)] object-contain block"
+            onLoad={onImageLoad}
+          />
+        </ReactCrop>
+      </div>
+
+      {/* 하단 고정 바 */}
+      <div className="px-5 pb-10 pt-4 flex flex-col gap-3">
+        <p className="text-center text-white/50 text-xs">
+          드래그해서 얼굴을 맞춰요
         </p>
-        <div className="flex gap-3 justify-end">
-          <Button variant="ghost" onClick={handleCancel}>
-            취소
-          </Button>
-          <Button variant="primary" onClick={handleConfirm}>
-            크롭 완료
-          </Button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setStep("upload")}
+            className="flex-1 py-3 rounded-2xl border border-white/20 text-white/70 text-sm font-medium hover:bg-white/10 transition-colors"
+          >
+            다시 선택
+          </button>
+          <button
+            onClick={handleConfirm}
+            className="flex-2 flex-[2] py-3 rounded-2xl bg-amber-400 text-white text-sm font-semibold hover:bg-amber-500 active:scale-95 transition-all"
+          >
+            확인
+          </button>
         </div>
       </div>
     </div>

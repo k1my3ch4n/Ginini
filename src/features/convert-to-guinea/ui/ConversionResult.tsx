@@ -25,8 +25,9 @@ async function downloadImage(url: string, filename: string) {
 }
 
 export function ConversionResult() {
-  const { uploadedImage, resultImage, reset } = useImageSessionStore();
-  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const { uploadedImage, resultImage, animalTrait, reset } =
+    useImageSessionStore();
+  const [isLightboxOpen, setIsLightboxOpen] = useState(true);
 
   useEffect(() => {
     if (!isLightboxOpen) return;
@@ -36,6 +37,8 @@ export function ConversionResult() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isLightboxOpen]);
+
+  const title = animalTrait ? `${animalTrait} 기니피그` : "기니피그";
 
   const handleDownload = () => {
     if (!resultImage) return;
@@ -48,8 +51,7 @@ export function ConversionResult() {
   };
 
   const handleTwitterShare = () => {
-    const text =
-      "나도 기니피그가 됐다! 🐹 Ginini에서 내 사진을 변환해봐!";
+    const text = "나도 기니피그가 됐다! 🐹 Ginini에서 내 사진을 변환해봐!";
     const url = window.location.href;
     window.open(
       `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
@@ -58,17 +60,69 @@ export function ConversionResult() {
     );
   };
 
+  /* ── 전체화면 라이트박스 ── */
+  if (isLightboxOpen && resultImage) {
+    return (
+      <div className="fixed inset-0 z-50 flex flex-col bg-black/90">
+        {/* 닫기 버튼 */}
+        <div className="flex justify-end px-5 pt-12">
+          <button
+            onClick={() => setIsLightboxOpen(false)}
+            className="text-white/60 hover:text-white text-2xl leading-none transition-colors"
+            aria-label="닫기"
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* 이미지 */}
+        <div className="flex-1 flex items-center justify-center px-6 py-4">
+          <img
+            src={resultImage}
+            alt={`${title} 변환 결과`}
+            className="max-w-full max-h-full rounded-2xl shadow-2xl object-contain"
+          />
+        </div>
+
+        {/* 타이틀 + 액션 */}
+        <div className="px-5 pb-10 flex flex-col items-center gap-4">
+          <p className="text-white font-bold text-lg">{title}</p>
+          <div className="flex gap-3 w-full max-w-xs">
+            <button
+              onClick={handleDownload}
+              className="flex-1 py-3 rounded-2xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 active:scale-95 transition-all"
+            >
+              저장
+            </button>
+            <button
+              onClick={handleKakaoShare}
+              className="flex-[2] py-3 rounded-2xl bg-amber-400 text-white text-sm font-semibold hover:bg-amber-500 active:scale-95 transition-all"
+            >
+              공유
+            </button>
+            <button
+              onClick={reset}
+              className="flex-1 py-3 rounded-2xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 active:scale-95 transition-all"
+            >
+              다시
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── 라이트박스 닫은 후 — Before/After 카드 뷰 ── */
   return (
     <div className="flex flex-col items-center gap-8 py-8 px-4 w-full">
       <div className="text-center">
         <div className="text-4xl mb-2">🎉</div>
-        <h2 className="text-xl font-bold text-gray-800">변환 완료!</h2>
+        <h2 className="text-xl font-bold text-gray-800">{title} 완성!</h2>
         <p className="text-sm text-gray-500 mt-1">
-          기니피그가 되었어요. 저장하고 공유해보세요!
+          저장하고 공유해보세요
         </p>
       </div>
 
-      {/* Before & After */}
       <div className="grid grid-cols-2 gap-4 w-full max-w-md">
         <div className="flex flex-col items-center gap-2">
           <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
@@ -84,7 +138,6 @@ export function ConversionResult() {
             <div className="w-full aspect-square rounded-2xl bg-gray-100" />
           )}
         </div>
-
         <div className="flex flex-col items-center gap-2">
           <span className="text-xs font-semibold text-amber-500 uppercase tracking-wide">
             After 🐹
@@ -102,12 +155,10 @@ export function ConversionResult() {
         </div>
       </div>
 
-      {/* Actions */}
       <div className="flex flex-col gap-3 w-full max-w-xs">
         <Button onClick={handleDownload} size="md" className="w-full gap-2">
           ⬇️ 이미지 저장
         </Button>
-
         <Button
           variant="ghost"
           size="md"
@@ -116,7 +167,6 @@ export function ConversionResult() {
         >
           💬 카카오톡 공유
         </Button>
-
         <Button
           variant="ghost"
           size="md"
@@ -125,7 +175,6 @@ export function ConversionResult() {
         >
           𝕏 트위터 공유
         </Button>
-
         <Button
           variant="ghost"
           size="md"
@@ -135,27 +184,6 @@ export function ConversionResult() {
           다시 변환하기
         </Button>
       </div>
-
-      {isLightboxOpen && resultImage && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-          onClick={() => setIsLightboxOpen(false)}
-        >
-          <img
-            src={resultImage}
-            alt="기니피그 변환 결과 (크게 보기)"
-            className="max-w-full max-h-full rounded-2xl shadow-2xl object-contain"
-            onClick={(e) => e.stopPropagation()}
-          />
-          <button
-            onClick={() => setIsLightboxOpen(false)}
-            className="absolute top-4 right-4 text-white text-3xl leading-none hover:opacity-70"
-            aria-label="닫기"
-          >
-            ×
-          </button>
-        </div>
-      )}
     </div>
   );
 }

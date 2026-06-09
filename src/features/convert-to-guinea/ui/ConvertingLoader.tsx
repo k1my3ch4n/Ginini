@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ProgressBar } from "@shared/ui";
 
 const MESSAGES = [
-  "기니피그 DNA 분석 중...",
+  "닮은꼴 특징을 녹이고 있어요",
   "털 색깔 맞추는 중...",
   "귀여운 눈 장착 중...",
   "볼살 통통하게 만드는 중...",
@@ -28,20 +27,20 @@ export function ConvertingLoader() {
   const messageIndex = Math.min(Math.floor(progress / 20), MESSAGES.length - 1);
 
   return (
-    <div className="flex flex-col items-center gap-6 py-12 px-4">
-      <div className="text-6xl animate-bounce">🐹</div>
+    <div className="flex flex-col items-center justify-center gap-6 min-h-screen bg-[#faf7f2] px-8">
+      {/* Ring spinner */}
+      <div className="w-16 h-16 rounded-full border-4 border-gray-200 border-t-amber-400 animate-spin" />
+
+      {/* 메시지 */}
       <div className="text-center">
         <p className="text-lg font-semibold text-gray-800 mb-1">
-          기니피그로 변환 중...
+          기니피그 굽는 중...
         </p>
-        <p className="text-sm text-gray-500">{MESSAGES[messageIndex]}</p>
+        <p className="text-3xl font-bold text-amber-400 my-2">
+          {Math.round(progress)}%
+        </p>
+        <p className="text-sm text-gray-400">{MESSAGES[messageIndex]}</p>
       </div>
-      <ProgressBar
-        value={Math.round(progress)}
-        label="기니피그화 진행률"
-        className="w-full max-w-xs"
-      />
-      <p className="text-xs text-gray-400">잠깐만요, 거의 다 됐어요!</p>
     </div>
   );
 }
