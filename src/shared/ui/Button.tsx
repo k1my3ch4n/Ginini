@@ -23,15 +23,15 @@ const variants: Record<Variant, string> = {
 };
 
 const sizes: Record<Size, string> = {
-  sm: "px-4 py-2 text-sm",
+  sm: "px-4 py-3 text-sm",
   md: "px-6 py-3 text-base",
   lg: "px-8 py-4 text-lg",
 };
 
 const iconSizes: Record<Size, string> = {
-  sm: "p-1.5",
-  md: "p-2",
-  lg: "p-3",
+  sm: "min-w-[44px] min-h-[44px] p-2",
+  md: "min-w-[44px] min-h-[44px] p-2.5",
+  lg: "min-w-[48px] min-h-[48px] p-3",
 };
 
 export function Button({

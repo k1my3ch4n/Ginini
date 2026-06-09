@@ -1,4 +1,5 @@
 import { mergeClasses } from "@shared/lib/utils";
+import { IconButton } from "./IconButton";
 
 interface ScreenHeaderProps {
   title: string;
@@ -11,14 +12,9 @@ interface ScreenHeaderProps {
 export function ScreenHeader({ title, onBack, right, className, titleId }: ScreenHeaderProps) {
   return (
     <div className={mergeClasses("flex items-center", className)}>
-      <button
-        type="button"
-        onClick={onBack}
-        aria-label="뒤로 가기"
-        className="flex items-center justify-center mr-3 text-gray-400 hover:text-[#4B3A2F] transition-colors cursor-pointer"
-      >
+      <IconButton onClick={onBack} aria-label="뒤로 가기" className="-ml-2 mr-1">
         <ChevronLeftIcon />
-      </button>
+      </IconButton>
       <h2 id={titleId} className="text-base font-semibold text-[#4B3A2F]">{title}</h2>
       {right && <div className="ml-auto">{right}</div>}
     </div>
@@ -28,8 +24,8 @@ export function ScreenHeader({ title, onBack, right, className, titleId }: Scree
 function ChevronLeftIcon() {
   return (
     <svg
-      width="9"
-      height="16"
+      width="12"
+      height="20"
       viewBox="0 0 9 16"
       fill="none"
       aria-hidden="true"

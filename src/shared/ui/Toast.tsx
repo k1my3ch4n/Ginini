@@ -1,5 +1,6 @@
 import { mergeClasses } from "@shared/lib/utils";
 import type { ToastItem as ToastItemType } from "@shared/model/toast-store";
+import { IconButton } from "./IconButton";
 
 const typeStyles = {
   success: "bg-emerald-500",
@@ -31,13 +32,13 @@ export function Toast({ toast, onRemove }: ToastProps) {
     >
       <span className="shrink-0 text-base font-bold">{typeIcons[toast.type]}</span>
       <p className="flex-1 text-sm font-medium leading-snug">{toast.message}</p>
-      <button
+      <IconButton
         onClick={() => onRemove(toast.id)}
-        className="shrink-0 rounded-full p-0.5 transition-colors hover:bg-white/25 cursor-pointer"
         aria-label="알림 닫기"
+        className="shrink-0 text-white hover:text-white hover:bg-white/25 active:bg-white/40"
       >
-        ✕
-      </button>
+        <span aria-hidden="true" className="text-sm font-bold leading-none">✕</span>
+      </IconButton>
     </div>
   );
 }
