@@ -1,4 +1,6 @@
 export { Button } from "./Button";
+export { Chip } from "./Chip";
+export { IconButton } from "./IconButton";
 export { ScreenHeader } from "./ScreenHeader";
 export { Skeleton } from "./Skeleton";
 export { ProgressBar } from "./ProgressBar";
