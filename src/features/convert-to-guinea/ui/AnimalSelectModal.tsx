@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useImageSessionStore } from "@entities/image-session";
 import { useConvertImage } from "../api/useConvertImage";
+import { ScreenHeader } from "@shared/ui";
 
 const ANIMAL_CHIPS = [
   "고양이상",
@@ -59,33 +60,28 @@ export function AnimalSelectModal() {
   return (
     <form
       onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}
-      className="flex flex-col w-full min-h-dvh bg-[#faf7f2] px-5 pt-6 pb-10"
+      className="flex flex-col w-full min-h-dvh bg-[#FBF7F1] px-5 pt-6 pb-10"
     >
-      {/* 헤더 */}
-      <div className="flex items-center justify-between mb-6">
-        <button
-          type="button"
-          onClick={() => setStep("cropping")}
-          aria-label="뒤로 가기"
-          className="text-gray-400 hover:text-gray-600 transition-colors text-sm flex items-center gap-1 cursor-pointer"
-        >
-          <span>&#8249;</span>
-        </button>
-        <h2 className="text-base font-semibold text-gray-800">닮은꼴 고르기</h2>
-        <button
-          type="button"
-          onClick={handleSkip}
-          disabled={isPending}
-          className="text-sm text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-        >
-          건너뛰기
-        </button>
-      </div>
+      <ScreenHeader
+        title="닮은꼴 고르기"
+        onBack={() => setStep("cropping")}
+        className="mb-6"
+        right={
+          <button
+            type="button"
+            onClick={handleSkip}
+            disabled={isPending}
+            className="text-sm text-gray-400 hover:text-[#4B3A2F] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          >
+            건너뛰기
+          </button>
+        }
+      />
 
       {/* 내 사진 썸네일 */}
       {thumbnailUrl && (
         <div className="flex justify-center mb-5">
-          <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-amber-300 shadow-md">
+          <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-[#E6A57E] shadow-md">
             <img
               src={thumbnailUrl}
               alt="내 사진"
@@ -110,8 +106,8 @@ export function AnimalSelectModal() {
             className={[
               "px-4 py-2 rounded-full text-sm font-medium border transition-all cursor-pointer",
               selected === chip
-                ? "bg-amber-400 border-amber-400 text-white shadow-sm"
-                : "bg-white border-gray-200 text-gray-700 hover:border-amber-300 hover:bg-amber-50",
+                ? "bg-[#E6A57E] border-[#E6A57E] text-white shadow-sm"
+                : "bg-white border-gray-200 text-[#4B3A2F] hover:border-[#E6A57E] hover:bg-[#fdf0e6]",
             ].join(" ")}
           >
             {chip}
@@ -132,7 +128,7 @@ export function AnimalSelectModal() {
           onChange={handleCustomInput}
           maxLength={50}
           placeholder="직접 입력 (선택사항) — 쿼카 느낌, 날카로운 눈매..."
-          className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-amber-400 transition-colors"
+          className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-[#4B3A2F] placeholder:text-gray-300 focus:outline-none focus:border-[#E6A57E] transition-colors"
         />
       </div>
 
@@ -140,7 +136,7 @@ export function AnimalSelectModal() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full py-4 rounded-2xl bg-amber-400 text-white font-semibold text-base hover:bg-amber-500 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
+        className="w-full py-4 rounded-2xl bg-[#E6A57E] text-white font-semibold text-base hover:bg-[#d4956e] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
       >
         {isPending ? "변환 중..." : "완성하기"}
       </button>

@@ -5,6 +5,7 @@ import ReactCrop, { type Crop, type PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { useImageSessionStore } from "@entities/image-session";
 import { useToast } from "@shared/model";
+import { ScreenHeader } from "@shared/ui";
 
 async function getCroppedBlob(
   image: HTMLImageElement,
@@ -102,18 +103,11 @@ export function ImageCropModal() {
       role="dialog"
       aria-modal="true"
       aria-labelledby="crop-dialog-title"
-      className="fixed inset-0 z-50 flex flex-col bg-[#faf7f2] md:left-1/2 md:right-auto md:-translate-x-1/2 md:max-w-sm md:w-full md:top-8 md:bottom-8 md:rounded-3xl md:overflow-hidden"
+      className="fixed inset-0 z-50 flex flex-col bg-[#FBF7F1] md:left-1/2 md:right-auto md:-translate-x-1/2 md:max-w-sm md:w-full md:top-8 md:bottom-8 md:rounded-3xl md:overflow-hidden"
     >
       {/* 상단 타이틀 */}
-      <div className="flex items-center px-5 pt-12 pb-4">
-        <button
-          onClick={() => setStep("upload")}
-          aria-label="뒤로 가기"
-          className="text-gray-400 hover:text-gray-700 transition-colors text-xl leading-none mr-3 cursor-pointer"
-        >
-          &#8249;
-        </button>
-        <h2 id="crop-dialog-title" className="text-gray-800 text-base font-semibold">동그랗게 맞추기</h2>
+      <div className="px-5 pt-6 pb-4">
+        <ScreenHeader title="동그랗게 맞추기" onBack={() => setStep("upload")} titleId="crop-dialog-title" />
       </div>
 
       {/* 크롭 영역 — 화면을 가득 채우고 원형 컷아웃 효과 */}
@@ -154,7 +148,7 @@ export function ImageCropModal() {
           <button
             ref={confirmRef}
             onClick={handleConfirm}
-            className="flex-2 flex-[2] py-3 rounded-2xl bg-amber-400 text-white text-sm font-semibold hover:bg-amber-500 active:scale-95 transition-all cursor-pointer"
+            className="flex-2 flex-[2] py-3 rounded-2xl bg-[#E6A57E] text-white text-sm font-semibold hover:bg-[#d4956e] active:scale-95 transition-all cursor-pointer"
           >
             확인
           </button>

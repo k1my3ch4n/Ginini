@@ -4,6 +4,7 @@ import { useCallback, useRef } from "react";
 import { validateImageFile, fileToDataURL } from "@shared/lib";
 import { useImageSessionStore } from "@entities/image-session";
 import { useToast } from "@shared/model";
+import { ScreenHeader } from "@shared/ui";
 
 export function UploadScreen() {
   const cameraRef = useRef<HTMLInputElement>(null);
@@ -34,18 +35,8 @@ export function UploadScreen() {
   };
 
   return (
-    <div className="flex flex-col w-full min-h-dvh bg-[#faf7f2] px-5 pt-6 pb-10">
-      {/* 헤더 */}
-      <div className="flex items-center mb-8">
-        <button
-          onClick={() => setStep("idle")}
-          aria-label="뒤로 가기"
-          className="text-gray-400 hover:text-gray-600 transition-colors text-xl leading-none mr-3 cursor-pointer"
-        >
-          &#8249;
-        </button>
-        <h2 className="text-base font-semibold text-gray-800">사진 올리기</h2>
-      </div>
+    <div className="flex flex-col w-full min-h-dvh bg-[#FBF7F1] px-5 pt-6 pb-10">
+      <ScreenHeader title="사진 올리기" onBack={() => setStep("idle")} className="mb-8" />
 
       {/* hidden inputs */}
       <input
@@ -68,7 +59,7 @@ export function UploadScreen() {
       <div className="flex flex-col gap-4 flex-1 justify-center">
         <button
           onClick={() => cameraRef.current?.click()}
-          className="flex flex-col items-center justify-center gap-3 w-full py-12 rounded-2xl bg-white border border-gray-100 shadow-sm hover:border-amber-300 hover:bg-amber-50 active:scale-95 transition-all cursor-pointer"
+          className="flex flex-col items-center justify-center gap-3 w-full py-12 rounded-2xl bg-white border border-gray-100 shadow-sm hover:border-[#E6A57E] hover:bg-[#fdf0e6] active:scale-95 transition-all cursor-pointer"
         >
           <CameraIcon className="w-10 h-10 text-gray-400" />
           <span className="text-sm font-medium text-gray-700">사진 촬영하기</span>
@@ -76,7 +67,7 @@ export function UploadScreen() {
 
         <button
           onClick={() => albumRef.current?.click()}
-          className="flex flex-col items-center justify-center gap-3 w-full py-12 rounded-2xl bg-white border border-gray-100 shadow-sm hover:border-amber-300 hover:bg-amber-50 active:scale-95 transition-all cursor-pointer"
+          className="flex flex-col items-center justify-center gap-3 w-full py-12 rounded-2xl bg-white border border-gray-100 shadow-sm hover:border-[#E6A57E] hover:bg-[#fdf0e6] active:scale-95 transition-all cursor-pointer"
         >
           <AlbumIcon className="w-10 h-10 text-gray-400" />
           <span className="text-sm font-medium text-gray-700">앨범에서 선택</span>
