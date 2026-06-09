@@ -36,7 +36,7 @@ export class ErrorBoundary extends Component<Props, State> {
         return this.props.fallback;
       }
       return (
-        <div className="min-h-screen flex items-center justify-center bg-amber-50 px-4">
+        <div role="alert" className="min-h-screen flex items-center justify-center bg-amber-50 px-4">
           <div className="text-center max-w-sm">
             <div className="text-5xl mb-4">🐹</div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">
@@ -47,7 +47,7 @@ export class ErrorBoundary extends Component<Props, State> {
             </p>
             <button
               onClick={this.handleReset}
-              className="rounded-xl bg-amber-400 px-6 py-2 text-sm font-semibold text-white hover:bg-amber-500 transition-colors"
+              className="rounded-xl bg-amber-400 px-6 py-2 text-sm font-semibold text-white hover:bg-amber-500 transition-colors cursor-pointer"
             >
               다시 시도하기
             </button>

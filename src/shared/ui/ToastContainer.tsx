@@ -7,7 +7,10 @@ export function ToastContainer() {
   const { toasts, remove } = useToastStore();
 
   return (
-    <div className="pointer-events-none fixed bottom-4 right-4 z-50 flex flex-col-reverse gap-2">
+    <div
+      aria-label="알림"
+      className="pointer-events-none fixed bottom-4 right-4 z-50 flex flex-col-reverse gap-2"
+    >
       {toasts.map((toast) => (
         <Toast key={toast.id} toast={toast} onRemove={remove} />
       ))}

@@ -21,6 +21,9 @@ interface ToastProps {
 export function Toast({ toast, onRemove }: ToastProps) {
   return (
     <div
+      role={toast.type === "error" ? "alert" : "status"}
+      aria-live={toast.type === "error" ? "assertive" : "polite"}
+      aria-atomic="true"
       className={mergeClasses(
         "pointer-events-auto flex min-w-[280px] max-w-sm items-center gap-3 rounded-xl px-4 py-3 text-white shadow-lg",
         typeStyles[toast.type],
@@ -30,8 +33,8 @@ export function Toast({ toast, onRemove }: ToastProps) {
       <p className="flex-1 text-sm font-medium leading-snug">{toast.message}</p>
       <button
         onClick={() => onRemove(toast.id)}
-        className="shrink-0 rounded-full p-0.5 transition-colors hover:bg-white/25"
-        aria-label="닫기"
+        className="shrink-0 rounded-full p-0.5 transition-colors hover:bg-white/25 cursor-pointer"
+        aria-label="알림 닫기"
       >
         ✕
       </button>
