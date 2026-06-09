@@ -34,9 +34,9 @@ export function ConverterWidget() {
 
   if (step === "error") {
     return (
-      <div role="alert" className="flex flex-col items-center gap-4 py-12 px-4 min-h-dvh bg-[#faf7f2] justify-center">
+      <div role="alert" className="flex flex-col items-center gap-4 py-12 px-4 min-h-dvh bg-[#FBF7F1] justify-center">
         <div className="text-5xl">😢</div>
-        <p className="text-lg font-semibold text-gray-800">
+        <p className="text-lg font-semibold text-[#4B3A2F]">
           변환 중 오류가 발생했어요
         </p>
         <p className="text-sm text-gray-500">잠시 후 다시 시도해 주세요.</p>
@@ -47,13 +47,13 @@ export function ConverterWidget() {
 
   /* step === 'idle' — 랜딩 화면 (마스코트 대화형) */
   return (
-    <div className="flex flex-col items-center justify-center min-h-dvh bg-[#faf7f2] px-6 py-12">
+    <div className="flex flex-col items-center justify-center min-h-dvh bg-[#FBF7F1] px-6 py-12">
       {/* 마스코트 */}
       <div className="text-8xl mb-4 select-none">🐹</div>
 
       {/* 말풍선 */}
       <div className="relative bg-white rounded-2xl px-6 py-4 shadow-sm mb-8 max-w-xs text-center">
-        <p className="text-gray-800 font-semibold text-base leading-snug">
+        <p className="text-[#4B3A2F] font-semibold text-base leading-snug">
           내 닮은꼴 기니피그,
           <br />
           만들어볼래?
@@ -67,7 +67,7 @@ export function ConverterWidget() {
       {/* 주 CTA */}
       <button
         onClick={() => setStep("upload")}
-        className="w-full max-w-xs py-4 rounded-2xl bg-amber-400 text-white font-semibold text-base hover:bg-amber-500 active:scale-95 transition-all shadow-sm mb-3 cursor-pointer"
+        className="w-full max-w-xs py-4 rounded-2xl bg-[#E6A57E] text-white font-semibold text-base hover:bg-[#d4956e] active:scale-95 transition-all shadow-sm mb-3 cursor-pointer"
       >
         좋아, 시작!
       </button>

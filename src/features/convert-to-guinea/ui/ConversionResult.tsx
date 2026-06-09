@@ -74,14 +74,14 @@ export function ConversionResult() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="lightbox-title"
-        className="fixed inset-0 z-50 flex flex-col bg-[#faf7f2] md:left-1/2 md:right-auto md:-translate-x-1/2 md:max-w-sm md:w-full md:top-8 md:bottom-8 md:rounded-3xl md:overflow-hidden"
+        className="fixed inset-0 z-50 flex flex-col bg-[#FBF7F1] md:left-1/2 md:right-auto md:-translate-x-1/2 md:max-w-sm md:w-full md:top-8 md:bottom-8 md:rounded-3xl md:overflow-hidden"
       >
         {/* 닫기 버튼 */}
         <div className="flex justify-end px-5 pt-12">
           <button
             ref={closeButtonRef}
             onClick={() => setIsLightboxOpen(false)}
-            className="text-gray-400 hover:text-gray-700 text-2xl leading-none transition-colors cursor-pointer"
+            className="text-gray-400 hover:text-[#4B3A2F] text-2xl leading-none transition-colors cursor-pointer"
             aria-label="라이트박스 닫기"
           >
             ✕
@@ -99,23 +99,23 @@ export function ConversionResult() {
 
         {/* 타이틀 + 액션 */}
         <div className="px-5 pb-10 flex flex-col items-center gap-4">
-          <p id="lightbox-title" className="text-gray-800 font-bold text-lg">{title}</p>
+          <p id="lightbox-title" className="text-[#4B3A2F] font-bold text-lg">{title}</p>
           <div className="flex gap-3 w-full max-w-xs">
             <button
               onClick={handleDownload}
-              className="flex-1 py-3 rounded-2xl border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-100 active:scale-95 transition-all cursor-pointer"
+              className="flex-1 py-3 rounded-2xl border border-gray-200 text-[#4B3A2F] text-sm font-medium hover:bg-gray-100 active:scale-95 transition-all cursor-pointer"
             >
               저장
             </button>
             <button
               onClick={handleKakaoShare}
-              className="flex-[2] py-3 rounded-2xl bg-amber-400 text-white text-sm font-semibold hover:bg-amber-500 active:scale-95 transition-all cursor-pointer"
+              className="flex-[2] py-3 rounded-2xl bg-[#E6A57E] text-white text-sm font-semibold hover:bg-[#d4956e] active:scale-95 transition-all cursor-pointer"
             >
               공유
             </button>
             <button
               onClick={reset}
-              className="flex-1 py-3 rounded-2xl border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-100 active:scale-95 transition-all cursor-pointer"
+              className="flex-1 py-3 rounded-2xl border border-gray-200 text-[#4B3A2F] text-sm font-medium hover:bg-gray-100 active:scale-95 transition-all cursor-pointer"
             >
               다시
             </button>
@@ -130,7 +130,7 @@ export function ConversionResult() {
     <div className="flex flex-col items-center gap-8 py-8 px-4 w-full">
       <div className="text-center">
         <div className="text-4xl mb-2">🎉</div>
-        <h2 className="text-xl font-bold text-gray-800">{title} 완성!</h2>
+        <h2 className="text-xl font-bold text-[#4B3A2F]">{title} 완성!</h2>
         <p className="text-sm text-gray-500 mt-1">
           저장하고 공유해보세요
         </p>
@@ -152,14 +152,14 @@ export function ConversionResult() {
           )}
         </div>
         <div className="flex flex-col items-center gap-2">
-          <span className="text-xs font-semibold text-amber-500 uppercase tracking-wide">
+          <span className="text-xs font-semibold text-[#E6A57E] uppercase tracking-wide">
             After 🐹
           </span>
           {resultImage ? (
             <button
               onClick={() => setIsLightboxOpen(true)}
               aria-label="결과 이미지 크게 보기"
-              className="w-full aspect-square overflow-hidden rounded-2xl border-2 border-amber-300 shadow-md cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+              className="w-full aspect-square overflow-hidden rounded-2xl border-2 border-[#E6A57E] shadow-md cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E6A57E]"
             >
               <img
                 src={resultImage}
@@ -168,7 +168,7 @@ export function ConversionResult() {
               />
             </button>
           ) : (
-            <div className="w-full aspect-square rounded-2xl bg-amber-50" />
+            <div className="w-full aspect-square rounded-2xl bg-[#fdf0e6]" />
           )}
         </div>
       </div>

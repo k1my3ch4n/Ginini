@@ -21,7 +21,7 @@ export function ProgressBar({
         <div className="mb-1.5 flex items-center justify-between">
           {label && <span className="text-sm text-gray-600">{label}</span>}
           {showPercentage && (
-            <span className="text-sm font-semibold text-amber-600">
+            <span className="text-sm font-semibold text-[#E6A57E]">
               {clamped}%
             </span>
           )}
@@ -29,7 +29,7 @@ export function ProgressBar({
       )}
       <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
         <div
-          className="h-full rounded-full bg-amber-500 transition-all duration-500 ease-out"
+          className="h-full rounded-full bg-[#E6A57E] transition-all duration-500 ease-out"
           style={{ width: `${clamped}%` }}
         />
       </div>

@@ -60,8 +60,8 @@ export function ImageDropZone() {
         "w-full min-h-64 rounded-2xl border-2 border-dashed",
         "cursor-pointer select-none transition-colors duration-200",
         isDragging
-          ? "border-amber-400 bg-amber-50"
-          : "border-zinc-300 bg-zinc-50 hover:border-amber-400 hover:bg-amber-50/40",
+          ? "border-[#E6A57E] bg-[#fdf0e6]"
+          : "border-zinc-300 bg-zinc-50 hover:border-[#E6A57E] hover:bg-[#fdf0e6]/40",
       ].join(" ")}
     >
       <input
@@ -73,7 +73,7 @@ export function ImageDropZone() {
       />
       <UploadIcon
         className={`w-12 h-12 transition-colors ${
-          isDragging ? "text-amber-500" : "text-zinc-400"
+          isDragging ? "text-[#E6A57E]" : "text-zinc-400"
         }`}
       />
       <div className="flex flex-col items-center gap-1.5 text-center px-6">
