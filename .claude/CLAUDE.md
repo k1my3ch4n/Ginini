@@ -2,16 +2,18 @@
 
 ## 1. 프로젝트 개요
 
-- **프로젝트명:** 기니피그네이터 (Guineapigator) - 사람 사진의 기니피그 캐릭터화 서비스
-- **설명:** 사용자가 자신의 사진을 업로드하면, AI 기술을 활용하여 사용자의 특징(헤어스타일, 안경, 표정 등)을 유지한 채 귀여운 기니피그 스타일 또는 3D 기니피그 캐릭터로 변환해 주는 웹 서비스입니다.
+- **프로젝트명:** 기니피그네이터 (Guineapigator) - 닮은꼴 기니피그 캐릭터 생성기
+- **설명:** 사용자가 자신의 사진을 업로드하고, 닮은꼴 동물상(고양이상, 강아지상 등)을 선택하면 해당 인상이 반영된 기니피그 캐릭터를 생성해 주는 웹 서비스입니다. "고양이상 기니피그", "단발머리 회사원 기니피그"처럼 특징을 섞은 귀여운 캐릭터를 만들어 줍니다.
+- **핵심 포지셔닝:** "정확한 변환"이 아닌 **"특징을 반영한 기니피그 프로필 캐릭터 생성기"**
+- **활용 목적:** SNS 프로필 이미지, 카카오톡 프로필 등 개인 캐릭터 이미지로 활용
 - **주요 타겟:** SNS 인증 및 재미 요소를 추구하는 일반 대중 (바이럴 루프 및 공유 기능 강조)
 
 ## 2. 프로젝트 목표
 
-1. **사용자 경험(UX) 최적화:** 이미지 업로드부터 AI 변환 완료까지의 과정을 직관적이고 지루하지 않게 설계 (스켈레톤, 프로그레스 애니메이션 활용).
+1. **사용자 경험(UX) 최적화:** 이미지 업로드 → 원형 크롭 → 닮은꼴 동물상 선택 → AI 변환 → 결과 확인까지의 흐름을 직관적으로 설계 (step 기반 상태 머신, 라이트박스 결과 뷰어 포함).
 2. **효율적이고 확장 가능한 아키텍처 구축:** **FSD(Feature-Sliced Design)** 구조를 도입하여 프론트엔드 코드의 모듈성 및 유지보수성 극대화.
-3. **효율적인 상태 관리 및 데이터 페칭:** 서버 상태(AI API 결과)와 클라이언트 상태(UI 단계, 이미지 데이터)를 명확히 분리하여 성능 최적화.
-4. **안전하고 비용 효율적인 AI 연동:** API Key 노출을 방지하는 백엔드 프록시 구조와 무분별한 요청을 막는 Rate Limit 구현.
+3. **효율적인 상태 관리 및 데이터 페칭:** 서버 상태(AI API 결과)와 클라이언트 상태(UI 단계, 이미지 데이터, 동물상 입력값)를 명확히 분리하여 성능 최적화.
+4. **안전하고 비용 효율적인 AI 연동:** API Key 노출을 방지하는 백엔드 프록시 구조와 무분별한 요청을 막는 Rate Limit 구현. Replicate `flux-kontext-pro` 모델 사용.
 
 ## 3. 프로젝트 디렉토리 구조 및 개발 방식
 
@@ -23,7 +25,7 @@
 - **State Management:** Zustand (클라이언트 전역 상태 관리)
 - **Data Fetching:** TanStack Query (서버 상태 관리 및 비동기 mutation 최적화)
 - **Architecture:** Feature-Sliced Design (FSD)
-- **AI API:** 미정 (개발 초기엔 mock으로 진행, 추후 fal.ai / Replicate / OpenAI 중 확정)
+- **AI API:** Replicate — `black-forest-labs/flux-kontext-pro` 모델 (기니피그 기본 프롬프트 + `animalTrait` 주입)
 - **이미지 크롭:** react-image-crop
 - **배포:** Vercel
 - **SNS 공유:** 카카오톡 SDK, 트위터/X Web Intent
@@ -31,11 +33,10 @@
 ### 🔐 환경 변수 구조 (.env.local)
 
 ```
-AI_API_KEY=              # AI 서비스 API Key (결정 후 추가)
-AI_API_URL=              # AI 서비스 엔드포인트
-NEXT_PUBLIC_KAKAO_APP_KEY=  # 카카오 JavaScript App Key
-RATE_LIMIT_MAX=3         # 분당 최대 요청 수
-RATE_LIMIT_WINDOW=60     # Rate Limit 윈도우 (초)
+REPLICATE_API_TOKEN=         # Replicate API Token
+NEXT_PUBLIC_KAKAO_APP_KEY=   # 카카오 JavaScript App Key
+RATE_LIMIT_MAX=3             # 분당 최대 요청 수
+RATE_LIMIT_WINDOW_SEC=60     # Rate Limit 윈도우 (초)
 ```
 
 ### ⚠️ Rate Limit 전략
