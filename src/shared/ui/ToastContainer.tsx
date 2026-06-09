@@ -9,7 +9,7 @@ export function ToastContainer() {
   return (
     <div
       aria-label="알림"
-      className="pointer-events-none fixed bottom-4 right-4 z-50 flex flex-col-reverse gap-2"
+      className="pointer-events-none fixed bottom-4 right-4 z-50 flex flex-col-reverse gap-2 md:right-auto md:left-1/2 md:-translate-x-1/2"
     >
       {toasts.map((toast) => (
         <Toast key={toast.id} toast={toast} onRemove={remove} />
