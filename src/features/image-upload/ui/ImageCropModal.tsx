@@ -141,14 +141,14 @@ export function ImageCropModal() {
         <div className="flex gap-3">
           <button
             onClick={() => setStep("upload")}
-            className="flex-1 py-3 rounded-2xl border border-gray-200 text-gray-500 text-sm font-medium hover:bg-gray-100 transition-colors cursor-pointer"
+            className="flex-1 py-4 rounded-2xl border border-gray-200 text-gray-500 text-sm font-medium hover:bg-gray-100 active:scale-95 transition-all cursor-pointer"
           >
             다시 선택
           </button>
           <button
             ref={confirmRef}
             onClick={handleConfirm}
-            className="flex-2 flex-[2] py-3 rounded-2xl bg-[#E6A57E] text-white text-sm font-semibold hover:bg-[#d4956e] active:scale-95 transition-all cursor-pointer"
+            className="flex-2 flex-[2] py-4 rounded-2xl bg-[#E6A57E] text-white text-sm font-semibold hover:bg-[#d4956e] active:scale-95 transition-all cursor-pointer"
           >
             확인
           </button>

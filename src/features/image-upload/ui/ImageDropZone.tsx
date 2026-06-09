@@ -80,7 +80,7 @@ export function ImageDropZone() {
         <p className="text-base font-semibold text-zinc-700">
           {isDragging
             ? "여기에 놓으세요!"
-            : "이미지를 드래그하거나 클릭하여 업로드"}
+            : <><span className="sm:hidden">탭해서 사진 선택</span><span className="hidden sm:inline">이미지를 드래그하거나 클릭하여 업로드</span></>}
         </p>
         <p className="text-sm text-zinc-400">JPG, PNG, WebP · 최대 10MB</p>
       </div>

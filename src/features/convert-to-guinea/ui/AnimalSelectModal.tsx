@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useImageSessionStore } from "@entities/image-session";
 import { useConvertImage } from "../api/useConvertImage";
-import { ScreenHeader } from "@shared/ui";
+import { Chip, ScreenHeader } from "@shared/ui";
 
 const ANIMAL_CHIPS = [
   "고양이상",
@@ -98,20 +98,13 @@ export function AnimalSelectModal() {
       {/* 동물상 칩 */}
       <div className="flex flex-wrap gap-2 justify-center mb-6">
         {ANIMAL_CHIPS.map((chip) => (
-          <button
+          <Chip
             key={chip}
-            type="button"
+            selected={selected === chip}
             onClick={() => handleChipClick(chip)}
-            aria-pressed={selected === chip}
-            className={[
-              "px-4 py-2 rounded-full text-sm font-medium border transition-all cursor-pointer",
-              selected === chip
-                ? "bg-[#E6A57E] border-[#E6A57E] text-white shadow-sm"
-                : "bg-white border-gray-200 text-[#4B3A2F] hover:border-[#E6A57E] hover:bg-[#fdf0e6]",
-            ].join(" ")}
           >
             {chip}
-          </button>
+          </Chip>
         ))}
       </div>
 

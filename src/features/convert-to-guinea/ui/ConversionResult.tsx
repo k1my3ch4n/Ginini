@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useImageSessionStore } from "@entities/image-session";
-import { Button } from "@shared/ui";
+import { Button, IconButton } from "@shared/ui";
 import { shareToKakao } from "@shared/lib/kakao";
 import { useToast } from "@shared/model";
 
@@ -77,15 +77,14 @@ export function ConversionResult() {
         className="fixed inset-0 z-50 flex flex-col bg-[#FBF7F1] md:left-1/2 md:right-auto md:-translate-x-1/2 md:max-w-sm md:w-full md:top-8 md:bottom-8 md:rounded-3xl md:overflow-hidden"
       >
         {/* 닫기 버튼 */}
-        <div className="flex justify-end px-5 pt-12">
-          <button
+        <div className="flex justify-end px-3 pt-10">
+          <IconButton
             ref={closeButtonRef}
             onClick={() => setIsLightboxOpen(false)}
-            className="text-gray-400 hover:text-[#4B3A2F] text-2xl leading-none transition-colors cursor-pointer"
             aria-label="라이트박스 닫기"
           >
-            ✕
-          </button>
+            <span aria-hidden="true" className="text-xl font-bold leading-none">✕</span>
+          </IconButton>
         </div>
 
         {/* 이미지 */}
@@ -103,19 +102,19 @@ export function ConversionResult() {
           <div className="flex gap-3 w-full max-w-xs">
             <button
               onClick={handleDownload}
-              className="flex-1 py-3 rounded-2xl border border-gray-200 text-[#4B3A2F] text-sm font-medium hover:bg-gray-100 active:scale-95 transition-all cursor-pointer"
+              className="flex-1 py-4 rounded-2xl border border-gray-200 text-[#4B3A2F] text-sm font-medium hover:bg-gray-100 active:scale-95 transition-all cursor-pointer"
             >
               저장
             </button>
             <button
               onClick={handleKakaoShare}
-              className="flex-[2] py-3 rounded-2xl bg-[#E6A57E] text-white text-sm font-semibold hover:bg-[#d4956e] active:scale-95 transition-all cursor-pointer"
+              className="flex-[2] py-4 rounded-2xl bg-[#E6A57E] text-white text-sm font-semibold hover:bg-[#d4956e] active:scale-95 transition-all cursor-pointer"
             >
               공유
             </button>
             <button
               onClick={reset}
-              className="flex-1 py-3 rounded-2xl border border-gray-200 text-[#4B3A2F] text-sm font-medium hover:bg-gray-100 active:scale-95 transition-all cursor-pointer"
+              className="flex-1 py-4 rounded-2xl border border-gray-200 text-[#4B3A2F] text-sm font-medium hover:bg-gray-100 active:scale-95 transition-all cursor-pointer"
             >
               다시
             </button>
