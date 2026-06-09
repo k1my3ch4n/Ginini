@@ -34,7 +34,7 @@ export function UploadScreen() {
   };
 
   return (
-    <div className="flex flex-col w-full min-h-screen bg-[#faf7f2] px-5 pt-6 pb-10">
+    <div className="flex flex-col w-full min-h-dvh bg-[#faf7f2] px-5 pt-6 pb-10">
       {/* 헤더 */}
       <div className="flex items-center mb-8">
         <button

@@ -34,7 +34,7 @@ export function ConverterWidget() {
 
   if (step === "error") {
     return (
-      <div role="alert" className="flex flex-col items-center gap-4 py-12 px-4 min-h-screen bg-[#faf7f2] justify-center">
+      <div role="alert" className="flex flex-col items-center gap-4 py-12 px-4 min-h-dvh bg-[#faf7f2] justify-center">
         <div className="text-5xl">😢</div>
         <p className="text-lg font-semibold text-gray-800">
           변환 중 오류가 발생했어요
@@ -47,7 +47,7 @@ export function ConverterWidget() {
 
   /* step === 'idle' — 랜딩 화면 (마스코트 대화형) */
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#faf7f2] px-6 py-12">
+    <div className="flex flex-col items-center justify-center min-h-dvh bg-[#faf7f2] px-6 py-12">
       {/* 마스코트 */}
       <div className="text-8xl mb-4 select-none">🐹</div>
 

@@ -102,18 +102,18 @@ export function ImageCropModal() {
       role="dialog"
       aria-modal="true"
       aria-labelledby="crop-dialog-title"
-      className="fixed inset-0 z-50 flex flex-col bg-black"
+      className="fixed inset-0 z-50 flex flex-col bg-[#faf7f2] md:left-1/2 md:right-auto md:-translate-x-1/2 md:max-w-sm md:w-full md:top-8 md:bottom-8 md:rounded-3xl md:overflow-hidden"
     >
       {/* 상단 타이틀 */}
       <div className="flex items-center px-5 pt-12 pb-4">
         <button
           onClick={() => setStep("upload")}
           aria-label="뒤로 가기"
-          className="text-white/60 hover:text-white transition-colors text-xl leading-none mr-3 cursor-pointer"
+          className="text-gray-400 hover:text-gray-700 transition-colors text-xl leading-none mr-3 cursor-pointer"
         >
           &#8249;
         </button>
-        <h2 id="crop-dialog-title" className="text-white text-base font-semibold">동그랗게 맞추기</h2>
+        <h2 id="crop-dialog-title" className="text-gray-800 text-base font-semibold">동그랗게 맞추기</h2>
       </div>
 
       {/* 크롭 영역 — 화면을 가득 채우고 원형 컷아웃 효과 */}
@@ -133,7 +133,7 @@ export function ImageCropModal() {
             ref={imgRef}
             src={uploadedImage}
             alt="크롭할 이미지"
-            className="max-w-full max-h-[calc(100vh-180px)] object-contain block"
+            className="max-w-full max-h-full object-contain block"
             onLoad={onImageLoad}
           />
         </ReactCrop>
@@ -141,13 +141,13 @@ export function ImageCropModal() {
 
       {/* 하단 고정 바 */}
       <div className="px-5 pb-10 pt-4 flex flex-col gap-3">
-        <p className="text-center text-white/50 text-xs">
+        <p className="text-center text-gray-400 text-xs">
           드래그해서 얼굴을 맞춰요
         </p>
         <div className="flex gap-3">
           <button
             onClick={() => setStep("upload")}
-            className="flex-1 py-3 rounded-2xl border border-white/20 text-white/70 text-sm font-medium hover:bg-white/10 transition-colors cursor-pointer"
+            className="flex-1 py-3 rounded-2xl border border-gray-200 text-gray-500 text-sm font-medium hover:bg-gray-100 transition-colors cursor-pointer"
           >
             다시 선택
           </button>

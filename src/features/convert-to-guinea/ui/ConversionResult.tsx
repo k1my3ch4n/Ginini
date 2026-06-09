@@ -74,14 +74,14 @@ export function ConversionResult() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="lightbox-title"
-        className="fixed inset-0 z-50 flex flex-col bg-black/90"
+        className="fixed inset-0 z-50 flex flex-col bg-[#faf7f2] md:left-1/2 md:right-auto md:-translate-x-1/2 md:max-w-sm md:w-full md:top-8 md:bottom-8 md:rounded-3xl md:overflow-hidden"
       >
         {/* 닫기 버튼 */}
         <div className="flex justify-end px-5 pt-12">
           <button
             ref={closeButtonRef}
             onClick={() => setIsLightboxOpen(false)}
-            className="text-white/60 hover:text-white text-2xl leading-none transition-colors cursor-pointer"
+            className="text-gray-400 hover:text-gray-700 text-2xl leading-none transition-colors cursor-pointer"
             aria-label="라이트박스 닫기"
           >
             ✕
@@ -99,11 +99,11 @@ export function ConversionResult() {
 
         {/* 타이틀 + 액션 */}
         <div className="px-5 pb-10 flex flex-col items-center gap-4">
-          <p id="lightbox-title" className="text-white font-bold text-lg">{title}</p>
+          <p id="lightbox-title" className="text-gray-800 font-bold text-lg">{title}</p>
           <div className="flex gap-3 w-full max-w-xs">
             <button
               onClick={handleDownload}
-              className="flex-1 py-3 rounded-2xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+              className="flex-1 py-3 rounded-2xl border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-100 active:scale-95 transition-all cursor-pointer"
             >
               저장
             </button>
@@ -115,7 +115,7 @@ export function ConversionResult() {
             </button>
             <button
               onClick={reset}
-              className="flex-1 py-3 rounded-2xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+              className="flex-1 py-3 rounded-2xl border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-100 active:scale-95 transition-all cursor-pointer"
             >
               다시
             </button>

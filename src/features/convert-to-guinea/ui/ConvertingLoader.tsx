@@ -30,7 +30,7 @@ export function ConvertingLoader() {
     <div
       role="status"
       aria-label="기니피그 변환 중"
-      className="flex flex-col items-center justify-center gap-6 min-h-screen bg-[#faf7f2] px-8"
+      className="flex flex-col items-center justify-center gap-6 min-h-dvh bg-[#faf7f2] px-8"
     >
       {/* Ring spinner */}
       <div
