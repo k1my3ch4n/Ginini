@@ -10,7 +10,7 @@ const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 });
 
-const PROMPT_CARTOON =
+const PROMPT_BASE =
   "Redraw the person in this photo as a cute kawaii anthropomorphic guinea pig character that is fully dressed in the same outfit as the person. " +
   "The character MUST be wearing clothes — this is required. The outfit must exactly match the clothing visible in the input photo: same garment type, same colors, same style. " +
   "ACCESSORIES: Reproduce every accessory visible in the photo (bags, glasses, hats, jewelry, etc.) on the character. If no accessories are visible in the photo, add none. " +
@@ -19,14 +19,16 @@ const PROMPT_CARTOON =
   "GUINEA PIG FEATURES: small rounded ears (NOT pointy), tiny Y-shaped nose pointing downward (NOT upturned pig snout), round compact head, chubby cheeks, NO tail, short stubby legs, round chubby torso. Short brushstroke fur texture. Large round cute eyes with a single white highlight dot. Small rounded mitten paws, NO claws. " +
   "Art style: 2D cartoon illustration, clean black ink outlines, cel-shading, NOT 3D rendered. Clean white background.";
 
-const PROMPT_REALISTIC =
-  "Transform the person in this photo into a photorealistic guinea pig. " +
-  "Match the guinea pig's fur color and pattern to the person's hair color and style. " +
-  "Reflect the same emotional expression and mood from the original photo on the guinea pig's face. " +
-  "GUINEA PIG FEATURES: real guinea pig anatomy — short rounded ears, small flat nose, compact round body, short legs, no tail, dense realistic fur. " +
-  "The result must look like an actual photograph of a real guinea pig, NOT a cartoon, illustration, or 3D render. " +
-  "Highly detailed realistic fur texture, natural photographic lighting, sharp focus, shallow depth of field. " +
-  "Keep the same pose orientation and framing as the original photo. Soft neutral or matching background.";
+const TRAIT_MAP: Record<string, string> = {
+  고양이상: "cat-like almond eyes and sharp graceful features",
+  강아지상: "friendly round puppy eyes and warm cheerful expression",
+  토끼상: "large gentle eyes and soft innocent expression",
+  여우상: "sharp pointed eyes and clever sly expression",
+  곰상: "wide round eyes and big friendly chubby face",
+  사슴상: "large doe eyes and delicate gentle expression",
+  햄찌상: "very round chubby cheeks and tiny bright eyes",
+  판다상: "wide dark-rimmed eyes and calm gentle expression",
+};
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
@@ -73,7 +75,7 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const image = formData.get("image") as File | null;
-    const mode = (formData.get("mode") as string | null) ?? "cartoon";
+    const animalTrait = (formData.get("animalTrait") as string | null) ?? "";
 
     if (!image) {
       return NextResponse.json(
@@ -82,7 +84,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const prompt = mode === "realistic" ? PROMPT_REALISTIC : PROMPT_CARTOON;
+    const traitDescription = TRAIT_MAP[animalTrait] ?? animalTrait;
+    const prompt = traitDescription
+      ? PROMPT_BASE +
+        ` The guinea pig character should subtly reflect the impression of a ${traitDescription}: adopt characteristic eye shape, face proportions, and overall vibe of that animal type, while remaining a guinea pig.`
+      : PROMPT_BASE;
 
     const arrayBuffer = await image.arrayBuffer();
     const blob = new Blob([arrayBuffer], { type: image.type });

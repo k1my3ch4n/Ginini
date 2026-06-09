@@ -2,26 +2,25 @@ import { create } from "zustand";
 
 export type ConversionStep =
   | "idle"
+  | "upload"
   | "cropping"
-  | "style-select"
+  | "animal-select"
   | "converting"
   | "done"
   | "error";
-
-export type ConversionMode = "cartoon" | "realistic";
 
 interface ImageSessionState {
   step: ConversionStep;
   uploadedImage: string | null;
   croppedImage: Blob | null;
   resultImage: string | null;
-  conversionMode: ConversionMode;
+  animalTrait: string;
 
   setStep: (step: ConversionStep) => void;
   setUploadedImage: (dataURL: string) => void;
   setCroppedImage: (blob: Blob) => void;
   setResultImage: (url: string) => void;
-  setConversionMode: (mode: ConversionMode) => void;
+  setAnimalTrait: (trait: string) => void;
   reset: () => void;
 }
 
@@ -30,7 +29,7 @@ const initialState = {
   uploadedImage: null,
   croppedImage: null,
   resultImage: null,
-  conversionMode: "cartoon" as ConversionMode,
+  animalTrait: "",
 };
 
 export const useImageSessionStore = create<ImageSessionState>((set) => ({
@@ -40,6 +39,6 @@ export const useImageSessionStore = create<ImageSessionState>((set) => ({
   setUploadedImage: (dataURL) => set({ uploadedImage: dataURL }),
   setCroppedImage: (blob) => set({ croppedImage: blob }),
   setResultImage: (url) => set({ resultImage: url }),
-  setConversionMode: (mode) => set({ conversionMode: mode }),
+  setAnimalTrait: (trait) => set({ animalTrait: trait }),
   reset: () => set(initialState),
 }));
