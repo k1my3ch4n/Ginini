@@ -4,39 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import ReactCrop, { type Crop, type PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { useImageSessionStore } from "@entities/image-session";
+import { getCroppedBlob } from "@shared/lib";
 import { useToast } from "@shared/model";
 import { ScreenHeader } from "@shared/ui";
-
-async function getCroppedBlob(
-  image: HTMLImageElement,
-  pixelCrop: PixelCrop,
-): Promise<Blob> {
-  const canvas = document.createElement("canvas");
-  const scaleX = image.naturalWidth / image.width;
-  const scaleY = image.naturalHeight / image.height;
-  canvas.width = Math.round(pixelCrop.width * scaleX);
-  canvas.height = Math.round(pixelCrop.height * scaleY);
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("Canvas context not available");
-  ctx.drawImage(
-    image,
-    Math.round(pixelCrop.x * scaleX),
-    Math.round(pixelCrop.y * scaleY),
-    Math.round(pixelCrop.width * scaleX),
-    Math.round(pixelCrop.height * scaleY),
-    0,
-    0,
-    canvas.width,
-    canvas.height,
-  );
-  return new Promise((resolve, reject) => {
-    canvas.toBlob(
-      (blob) => (blob ? resolve(blob) : reject(new Error("Blob 변환 실패"))),
-      "image/jpeg",
-      0.92,
-    );
-  });
-}
 
 export function ImageCropModal() {
   const { uploadedImage, setCroppedImage, setStep } = useImageSessionStore();

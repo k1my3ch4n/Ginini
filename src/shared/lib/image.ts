@@ -1,3 +1,5 @@
+import type { PixelCrop } from "react-image-crop";
+
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 const MAX_SIZE_MB = 10;
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
@@ -42,7 +44,61 @@ export function dataURLToBlob(dataURL: string): Blob {
 }
 
 export function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  if (bytes < 1024) {
+    return `${bytes} B`;
+  }
+  if (bytes < 1024 * 1024) {
+    return `${(bytes / 1024).toFixed(1)} KB`;
+  }
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+export async function getCroppedBlob(
+  image: HTMLImageElement,
+  pixelCrop: PixelCrop,
+): Promise<Blob> {
+  const canvas = document.createElement("canvas");
+  const scaleX = image.naturalWidth / image.width;
+  const scaleY = image.naturalHeight / image.height;
+  canvas.width = Math.round(pixelCrop.width * scaleX);
+  canvas.height = Math.round(pixelCrop.height * scaleY);
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    throw new Error("Canvas context not available");
+  }
+  ctx.drawImage(
+    image,
+    Math.round(pixelCrop.x * scaleX),
+    Math.round(pixelCrop.y * scaleY),
+    Math.round(pixelCrop.width * scaleX),
+    Math.round(pixelCrop.height * scaleY),
+    0,
+    0,
+    canvas.width,
+    canvas.height,
+  );
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (blob) => (blob ? resolve(blob) : reject(new Error("Blob 변환 실패"))),
+      "image/jpeg",
+      0.92,
+    );
+  });
+}
+
+export async function downloadImage(
+  url: string,
+  filename: string,
+): Promise<void> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("fetch failed");
+  }
+  const blob = await response.blob();
+  const blobUrl = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = blobUrl;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(blobUrl);
 }

@@ -3,20 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useImageSessionStore } from "@entities/image-session";
 import { Button, IconButton } from "@shared/ui";
+import { downloadImage } from "@shared/lib";
 import { shareToKakao } from "@shared/lib/kakao";
 import { useToast } from "@shared/model";
-
-async function downloadImage(url: string, filename: string): Promise<void> {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error("fetch failed");
-  const blob = await response.blob();
-  const blobUrl = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = blobUrl;
-  link.download = filename;
-  link.click();
-  URL.revokeObjectURL(blobUrl);
-}
 
 export function ConversionResult() {
   const { uploadedImage, resultImage, animalTrait, reset } =
@@ -26,22 +15,30 @@ export function ConversionResult() {
   const { success, error: showError } = useToast();
 
   useEffect(() => {
-    if (!isLightboxOpen) return;
+    if (!isLightboxOpen) {
+      return;
+    }
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsLightboxOpen(false);
+      if (e.key === "Escape") {
+        setIsLightboxOpen(false);
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isLightboxOpen]);
 
   useEffect(() => {
-    if (isLightboxOpen) closeButtonRef.current?.focus();
+    if (isLightboxOpen) {
+      closeButtonRef.current?.focus();
+    }
   }, [isLightboxOpen]);
 
   const title = animalTrait ? `${animalTrait} 기니피그` : "기니피그";
 
   const handleDownload = async () => {
-    if (!resultImage) return;
+    if (!resultImage) {
+      return;
+    }
     try {
       await downloadImage(resultImage, "guinea-pig-me.png");
       success("이미지를 저장했어요!");
@@ -51,7 +48,9 @@ export function ConversionResult() {
   };
 
   const handleKakaoShare = () => {
-    if (!resultImage) return;
+    if (!resultImage) {
+      return;
+    }
     shareToKakao(resultImage);
     success("카카오톡 공유를 시작했어요!");
   };
@@ -83,12 +82,15 @@ export function ConversionResult() {
             onClick={() => setIsLightboxOpen(false)}
             aria-label="라이트박스 닫기"
           >
-            <span aria-hidden="true" className="text-xl font-bold leading-none">✕</span>
+            <span aria-hidden="true" className="text-xl font-bold leading-none">
+              ✕
+            </span>
           </IconButton>
         </div>
 
         {/* 이미지 */}
         <div className="flex-1 flex items-center justify-center px-6 py-4">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={resultImage}
             alt={`${title} 변환 결과`}
@@ -98,7 +100,9 @@ export function ConversionResult() {
 
         {/* 타이틀 + 액션 */}
         <div className="px-5 pb-10 flex flex-col items-center gap-4">
-          <p id="lightbox-title" className="text-[#4B3A2F] font-bold text-lg">{title}</p>
+          <p id="lightbox-title" className="text-[#4B3A2F] font-bold text-lg">
+            {title}
+          </p>
           <div className="flex gap-3 w-full max-w-xs">
             <button
               onClick={handleDownload}
@@ -130,9 +134,7 @@ export function ConversionResult() {
       <div className="text-center">
         <div className="text-4xl mb-2">🎉</div>
         <h2 className="text-xl font-bold text-[#4B3A2F]">{title} 완성!</h2>
-        <p className="text-sm text-gray-500 mt-1">
-          저장하고 공유해보세요
-        </p>
+        <p className="text-sm text-gray-500 mt-1">저장하고 공유해보세요</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4 w-full max-w-md">
@@ -141,6 +143,7 @@ export function ConversionResult() {
             Before
           </span>
           {uploadedImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={uploadedImage}
               alt="원본 이미지"
@@ -160,6 +163,7 @@ export function ConversionResult() {
               aria-label="결과 이미지 크게 보기"
               className="w-full aspect-square overflow-hidden rounded-2xl border-2 border-[#E6A57E] shadow-md cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E6A57E]"
             >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={resultImage}
                 alt="기니피그 변환 결과"
