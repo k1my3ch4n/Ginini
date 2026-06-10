@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Replicate, { type FileOutput } from "replicate";
 import { GoogleGenAI, Type } from "@google/genai";
+import { ANIMAL_TRAIT_MAP } from "@shared/lib/animal-traits";
 
 // AI 추론이 최대 120초 걸릴 수 있어서 Next.js route 타임아웃을 연장
 export const maxDuration = 120;
@@ -15,11 +16,21 @@ const replicate = new Replicate({
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 const ANALYSIS_PROMPT =
-  "Look at the person's face in this photo and describe the visual features needed to recreate them " +
-  "as a cartoon character: face shape, eye shape and color, eyebrow style, hairstyle (length, texture, bangs), " +
-  "hair color, and any visible accessories on the head or face (glasses, earrings, hairpins, etc.). " +
+  "Look closely at the person's face in this photo and describe the visual features needed to recreate them " +
+  "as a cartoon character. Be specific and vivid rather than generic — for example, prefer \"warm hazel-brown\" " +
+  "over \"brown\", or \"thin and slightly arched\" over \"normal\". Describe: " +
+  "face shape (e.g. round, oval, square, heart-shaped, with notable jawline or cheek features); " +
+  "eye shape and color (size, tilt, lid shape, exact color tone); " +
+  "eyebrow style (thickness, shape, arch); " +
+  "nose shape (size and shape, e.g. small button nose, straight bridge, wide nostrils); " +
+  "mouth and lip shape (size, fullness, resting expression of the mouth); " +
+  "overall facial expression or vibe (e.g. bright and cheerful, calm and gentle, sharp and confident); " +
+  "hairstyle (length, texture, parting, bangs, volume); hair color (specific shade); " +
+  "any visible accessories on the head or face (glasses, earrings, hairpins, etc.); " +
+  "and the head pose / viewing angle of the photo (e.g. straight-on front view, slightly turned to the left, " +
+  "three-quarter view from the right, looking up, looking down). " +
   "Focus only on visual appearance. Do not mention age, gender, ethnicity, or identity. " +
-  "If no accessories are visible, use \"none\".";
+  'If no accessories are visible, use "none".';
 
 const ANALYSIS_SCHEMA = {
   type: Type.OBJECT,
@@ -28,18 +39,26 @@ const ANALYSIS_SCHEMA = {
     eyeShape: { type: Type.STRING },
     eyeColor: { type: Type.STRING },
     eyebrows: { type: Type.STRING },
+    noseShape: { type: Type.STRING },
+    mouthShape: { type: Type.STRING },
+    expression: { type: Type.STRING },
     hairstyle: { type: Type.STRING },
     hairColor: { type: Type.STRING },
     accessories: { type: Type.STRING },
+    headPose: { type: Type.STRING },
   },
   required: [
     "faceShape",
     "eyeShape",
     "eyeColor",
     "eyebrows",
+    "noseShape",
+    "mouthShape",
+    "expression",
     "hairstyle",
     "hairColor",
     "accessories",
+    "headPose",
   ],
 };
 
@@ -48,9 +67,13 @@ export interface FaceFeatures {
   eyeShape: string;
   eyeColor: string;
   eyebrows: string;
+  noseShape: string;
+  mouthShape: string;
+  expression: string;
   hairstyle: string;
   hairColor: string;
   accessories: string;
+  headPose: string;
 }
 
 async function analyzeFace(
@@ -90,7 +113,8 @@ const PROMPT_BASE =
   "as a close-up head/face portrait suitable for a profile picture. " +
   "GUINEA PIG FIRST: Prioritize guinea pig characteristics over human facial accuracy — small rounded ears (NOT pointy), " +
   "tiny Y-shaped nose pointing downward (NOT upturned pig snout), round compact head, chubby round cheeks, " +
-  "large round cute eyes with a single white highlight dot, short brushstroke fur texture covering the face. " +
+  "cute cartoon eyes with a single white highlight dot, short brushstroke fur texture covering the face. " +
+  "Eye size and shape should vary based on the analyzed face below — not all guinea pigs should have the same big round eyes. " +
   "The result should clearly read as a guinea pig character first, with the person's likeness as a subtle accent. " +
   "FRAMING: This is a tight head-only avatar icon. No neck, shoulders, collar, or clothing should be visible — only the head/face remains, cropped immediately below the chin/jawline. " +
   "Do NOT add a hat, hood, or any headwear that extends down over the shoulders. The guinea pig head should fill most of the frame. " +
@@ -108,23 +132,15 @@ function buildPrompt(features: FaceFeatures, traitDescription: string): string {
 
   return (
     PROMPT_BASE +
-    ` FACE: Subtly echo these features — face shape: ${features.faceShape}, eye shape: ${features.eyeShape}, eye color: ${features.eyeColor}, eyebrows: ${features.eyebrows} — just enough to feel personal.` +
+    ` EYES: The eye shape and size must closely follow the analyzed feature — eye shape: ${features.eyeShape}, eye color: ${features.eyeColor}. Do not default to large round eyes if the analyzed shape is different (e.g. narrow, droopy, upturned, hooded).` +
+    ` FACE: Subtly echo these features — face shape: ${features.faceShape}, eyebrows: ${features.eyebrows}, nose: ${features.noseShape}, mouth: ${features.mouthShape} — just enough to feel personal.` +
+    ` EXPRESSION: Give the character a ${features.expression} expression.` +
     ` HAIR: Give the guinea pig a ${features.hairColor} ${features.hairstyle} hairstyle, adapted to sit naturally on its round head.` +
+    ` POSE: The head should be oriented as if photographed from a ${features.headPose} angle, while keeping the character centered in frame.` +
     accessoriesPart +
     traitPart
   );
 }
-
-const TRAIT_MAP: Record<string, string> = {
-  고양이상: "cat-like almond eyes and sharp graceful features",
-  강아지상: "friendly round puppy eyes and warm cheerful expression",
-  토끼상: "large gentle eyes and soft innocent expression",
-  여우상: "sharp pointed eyes and clever sly expression",
-  곰상: "wide round eyes and big friendly chubby face",
-  사슴상: "large doe eyes and delicate gentle expression",
-  햄찌상: "very round chubby cheeks and tiny bright eyes",
-  판다상: "wide dark-rimmed eyes and calm gentle expression",
-};
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
@@ -180,7 +196,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const traitDescription = TRAIT_MAP[animalTrait] ?? animalTrait;
+    const traitDescription = ANIMAL_TRAIT_MAP[animalTrait] ?? animalTrait;
 
     const arrayBuffer = await image.arrayBuffer();
 
