@@ -107,7 +107,11 @@ export function ImageCropModal() {
     >
       {/* 상단 타이틀 */}
       <div className="px-5 pt-6 pb-4">
-        <ScreenHeader title="동그랗게 맞추기" onBack={() => setStep("upload")} titleId="crop-dialog-title" />
+        <ScreenHeader
+          title="동그랗게 맞추기"
+          onBack={() => setStep("upload")}
+          titleId="crop-dialog-title"
+        />
       </div>
 
       {/* 크롭 영역 — 화면을 가득 채우고 원형 컷아웃 효과 */}

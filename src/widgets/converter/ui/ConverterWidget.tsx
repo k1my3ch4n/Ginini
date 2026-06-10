@@ -34,7 +34,10 @@ export function ConverterWidget() {
 
   if (step === "error") {
     return (
-      <div role="alert" className="flex flex-col items-center gap-4 py-12 px-4 min-h-dvh bg-[#FBF7F1] justify-center">
+      <div
+        role="alert"
+        className="flex flex-col items-center gap-4 py-12 px-4 min-h-dvh bg-[#FBF7F1] justify-center"
+      >
         <div className="text-5xl">😢</div>
         <p className="text-lg font-semibold text-[#4B3A2F]">
           변환 중 오류가 발생했어요
