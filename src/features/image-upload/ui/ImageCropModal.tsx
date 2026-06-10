@@ -6,7 +6,7 @@ import "react-image-crop/dist/ReactCrop.css";
 import { useImageSessionStore } from "@entities/image-session";
 import { getCroppedBlob } from "@shared/lib";
 import { useToast } from "@shared/model";
-import { ScreenHeader } from "@shared/ui";
+import { FullscreenSheet, ScreenHeader } from "@shared/ui";
 
 export function ImageCropModal() {
   const { uploadedImage, setCroppedImage, setStep } = useImageSessionStore();
@@ -69,12 +69,7 @@ export function ImageCropModal() {
   }
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="crop-dialog-title"
-      className="fixed inset-0 z-50 flex flex-col bg-[#FBF7F1] md:left-1/2 md:right-auto md:-translate-x-1/2 md:max-w-sm md:w-full md:top-8 md:bottom-8 md:rounded-3xl md:overflow-hidden"
-    >
+    <FullscreenSheet titleId="crop-dialog-title">
       {/* 상단 타이틀 */}
       <div className="px-5 pt-6 pb-4">
         <ScreenHeader
@@ -128,6 +123,6 @@ export function ImageCropModal() {
           </button>
         </div>
       </div>
-    </div>
+    </FullscreenSheet>
   );
 }

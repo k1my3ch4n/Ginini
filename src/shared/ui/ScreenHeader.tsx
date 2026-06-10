@@ -1,5 +1,6 @@
 import { mergeClasses } from "@shared/lib/utils";
 import { IconButton } from "./IconButton";
+import { ChevronLeftIcon } from "./icons";
 
 interface ScreenHeaderProps {
   title: string;
@@ -18,25 +19,5 @@ export function ScreenHeader({ title, onBack, right, className, titleId }: Scree
       <h2 id={titleId} className="text-base font-semibold text-[#4B3A2F]">{title}</h2>
       {right && <div className="ml-auto">{right}</div>}
     </div>
-  );
-}
-
-function ChevronLeftIcon() {
-  return (
-    <svg
-      width="12"
-      height="20"
-      viewBox="0 0 9 16"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M8 1L1 8L8 15"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }

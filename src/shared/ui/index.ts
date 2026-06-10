@@ -1,5 +1,7 @@
+export { Avatar } from "./Avatar";
 export { Button } from "./Button";
 export { Chip } from "./Chip";
+export { FullscreenSheet } from "./FullscreenSheet";
 export { IconButton } from "./IconButton";
 export { ScreenHeader } from "./ScreenHeader";
 export { Skeleton } from "./Skeleton";
@@ -8,3 +10,5 @@ export { Toast } from "./Toast";
 export { ToastContainer } from "./ToastContainer";
 export { Providers } from "./Providers";
 export { ErrorBoundary } from "./ErrorBoundary";
+export { UploadOptionCard } from "./UploadOptionCard";
+export * from "./icons";

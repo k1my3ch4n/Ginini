@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useImageSessionStore } from "@entities/image-session";
 import { useConvertImage } from "../api/useConvertImage";
-import { Chip, ScreenHeader } from "@shared/ui";
+import { Avatar, Chip, ScreenHeader } from "@shared/ui";
 import { ANIMAL_TRAIT_KEYS } from "@shared/lib";
 
 export function AnimalSelectModal() {
@@ -80,14 +80,7 @@ export function AnimalSelectModal() {
       {/* 내 사진 썸네일 */}
       {thumbnailUrl && (
         <div className="flex justify-center mb-5">
-          <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-[#E6A57E] shadow-md">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={thumbnailUrl}
-              alt="내 사진"
-              className="w-full h-full object-cover"
-            />
-          </div>
+          <Avatar src={thumbnailUrl} alt="내 사진" />
         </div>
       )}
 

@@ -308,14 +308,14 @@ Modify 3 (스토어)
 
 ### Phase 4 (P3) — 컴포넌트 분리
 
-- [ ] `ConverterWidget`의 idle/error 화면 → 피쳐로 추출
-- [ ] `ConversionResult` → `ResultLightbox` + `ResultCardView` 분리
-- [ ] (선택) UploadOptionCard, Avatar, FullscreenSheet, ChipSelector, 아이콘 모음 정리
+- [x] `ConverterWidget`의 idle/error 화면 → 피쳐로 추출
+- [x] `ConversionResult` → `ResultLightbox` + `ResultCardView` 분리
+- [x] (선택) UploadOptionCard, Avatar, FullscreenSheet, ChipSelector, 아이콘 모음 정리
 
 ### Phase 5 (P3) — 코드 스타일 / lint 정리
 
-- [ ] `if (!A) return;` / `if (A) B;` 형태의 단일 문장 if를 전부 중괄호 블록으로 변경 (현재 `AnimalSelectModal.tsx`, `ConversionResult.tsx`, `ConvertingLoader.tsx`, `shared/lib/kakao.ts`, `shared/lib/image.ts`는 적용 완료, 다른 파일들은 전수 점검 필요)
-- [ ] ESLint `curly: ["error", "all"]` 규칙 추가 검토 — 추가 시 위 작업을 `eslint --fix`로 일괄 적용 가능
+- [x] `if (!A) return;` / `if (A) B;` 형태의 단일 문장 if를 전부 중괄호 블록으로 변경 (전수 점검 완료, 위반 사례 없음)
+- [x] ESLint `curly: ["error", "all"]` 규칙 추가
 - [x] `AnimalSelectModal.tsx` `react-hooks/set-state-in-effect` 에러 해결 (croppedImage thumbnail URL 생성 로직을 effect 밖으로 이동 또는 다른 패턴으로 변경)
 - [x] `AnimalSelectModal.tsx` 썸네일 `<img>`의 `@next/next/no-img-element` 경고 처리 (eslint-disable 주석 또는 next/image 적용)
 
@@ -345,3 +345,22 @@ Modify 3 (스토어)
 - `ConversionResult.tsx`의 로컬 `downloadImage` 제거 → `@shared/lib` import로 대체
 - `processFile`은 `UploadScreen.tsx` 1곳에만 존재 (Phase 1에서 이미 중복 제거됨) — 추가 작업 불필요
 - `tsc --noEmit` 통과
+
+**Phase 4 완료**
+
+- `src/widgets/converter/ui/IdleScreen.tsx`, `ErrorScreen.tsx` 신규: `ConverterWidget`의 idle/error 화면을 props 기반 컴포넌트로 추출
+- `ConverterWidget.tsx`는 step별 컴포넌트 분기만 남도록 정리
+- `src/features/convert-to-guinea/ui/ResultLightbox.tsx`, `ResultCardView.tsx` 신규: `ConversionResult.tsx`의 두 렌더 분기를 분리
+- `ConversionResult.tsx`는 상태(라이트박스 토글)와 핸들러(다운로드/공유/리셋)만 보유, 두 컴포넌트에 props로 전달
+- `tsc --noEmit`, `eslint` 모두 통과
+- `src/shared/ui/FullscreenSheet.tsx` 신규: `ImageCropModal`, `ResultLightbox`의 중복된 풀스크린 다이얼로그 래퍼(`role="dialog"` + 반응형 시트 스타일) 추출
+- `src/shared/ui/UploadOptionCard.tsx` 신규: `UploadScreen`의 카메라/앨범 카드 버튼 2개를 props 기반 컴포넌트로 추출
+- `src/shared/ui/Avatar.tsx` 신규: `AnimalSelectModal`의 원형 썸네일을 `size` prop 기반 컴포넌트로 추출
+- `src/shared/ui/icons.tsx` 신규: `ChevronLeftIcon`(ScreenHeader), `CameraIcon`/`AlbumIcon`(UploadScreen)을 한 곳으로 통합
+- `tsc --noEmit`, `eslint` 모두 통과
+
+**Phase 5 완료**
+
+- 코드베이스 전수 점검 결과 중괄호 없는 단일 문장 if/else 없음 (이전 단계에서 이미 정리 완료)
+- `eslint.config.mjs`에 `curly: ["error", "all"]` 규칙 추가
+- `eslint --fix`, `tsc --noEmit` 모두 통과 (변경 없음 — 위반 사례 없었음)
