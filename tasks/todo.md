@@ -28,15 +28,19 @@
 ## ✅ 완료된 기능 (유지)
 
 ### ✅ Feature 0–1: 프로젝트 설정 + 공통 UI
+
 > 변경 없음. Button, Toast, ProgressBar, Skeleton, ErrorBoundary 모두 그대로 사용.
 
 ### ✅ Feature 2: 이미지 업로드 (드롭존)
+
 > `ImageDropZone`, `ImagePreview` — 변경 없음.
 
 ### ✅ Feature 5: 변환 결과 화면
+
 > `ConversionResult` — 공유 버튼, 다운로드, 다시 변환 — 변경 없음.
 
 ### ✅ Feature 6-7: 위젯 조립 + 홈 화면
+
 > 레이아웃 구조는 유지, step 흐름만 수정 예정.
 
 ---
@@ -159,12 +163,12 @@ _파일: `src/app/api/convert/route.ts`_
 - [ ] 닮은꼴 trait 매핑 테이블 작성 (한국어 → 영어 prompt 조각)
   ```ts
   const TRAIT_MAP: Record<string, string> = {
-    '고양이상': 'cat-like almond eyes and sharp graceful features',
-    '강아지상': 'friendly round puppy eyes and warm cheerful expression',
-    '토끼상': 'large gentle eyes and soft innocent expression',
-    '여우상': 'sharp pointed eyes and clever sly expression',
-    '곰상': 'wide round eyes and big friendly chubby face',
-  }
+    고양이상: "cat-like almond eyes and sharp graceful features",
+    강아지상: "friendly round puppy eyes and warm cheerful expression",
+    토끼상: "large gentle eyes and soft innocent expression",
+    여우상: "sharp pointed eyes and clever sly expression",
+    곰상: "wide round eyes and big friendly chubby face",
+  };
   ```
 - [ ] 자유 입력의 경우 그대로 prompt에 삽입 (50자 제한으로 안전)
 - [ ] 프롬프트 결과물 테스트 및 반복 개선
@@ -176,16 +180,19 @@ _파일: `src/app/api/convert/route.ts`_
 > 스타일 LoRA로 기니피그 일러스트 스타일 고정 + IP-Adapter로 얼굴 특징 보존
 
 #### C-1. 학습 데이터 준비
+
 - [ ] 기니피그 캐릭터 일러스트 이미지 100~200장 수집 (동일 스타일 기준)
 - [ ] 캡션 작성 (각 이미지 특징 설명)
 
 #### C-2. LoRA 학습
+
 - [ ] RunPod 또는 Vast.ai GPU 인스턴스 설정
 - [ ] Kohya SS 또는 Flux LoRA 학습 스크립트 설정
 - [ ] 스타일 LoRA 학습 (예상: A100 기준 1~3시간, $5~$20)
 - [ ] 결과물 검증 및 반복
 
 #### C-3. Replicate 연동
+
 - [ ] 학습된 LoRA를 Replicate에 배포
 - [ ] `route.ts`의 MODEL 상수를 커스텀 LoRA 모델로 교체
 - [ ] IP-Adapter 조합 검토 (얼굴 특징 보존 강화)
@@ -195,20 +202,24 @@ _파일: `src/app/api/convert/route.ts`_
 ## 🛡️ 기존 유지 항목 (변경 없음)
 
 ### Feature 8: 품질 및 배포
+
 - [x] ErrorBoundary, SEO, OG 이미지
 - [ ] Vercel 배포 설정
 - [ ] 라이트하우스 성능 체크 (LCP < 2.5s)
 
 ### Feature 10: SNS 공유 (카카오)
+
 - [ ] 카카오 개발자 콘솔 앱 생성 + 도메인 등록
 - [ ] `.env.local` `NEXT_PUBLIC_KAKAO_APP_KEY` 입력
 - [ ] 결과 이미지 공개 URL 확인
 
 ### Feature 11: 디자인 개선
+
 - [ ] 로고, 파비콘, OG 이미지 실제 에셋 교체
 - [ ] 컬러 팔레트 최종 확정
 
 ### Feature 12: 배포
+
 - [ ] Vercel 환경 변수 등록 (`REPLICATE_API_TOKEN`, `NEXT_PUBLIC_KAKAO_APP_KEY` 등)
 - [ ] Rate Limit 고도화 (Upstash Redis 검토)
 
@@ -232,21 +243,22 @@ Modify 3 (스토어)
 
 ## 🗒️ 변경 파일 요약
 
-| 파일 | 작업 |
-|------|------|
-| `entities/image-session/model/store.ts` | `conversionMode` 제거 → `animalTrait` 추가 |
-| `features/convert-to-guinea/api/useConvertImage.ts` | `mode` → `animalTrait` |
-| `app/api/convert/route.ts` | 프롬프트 재설계, `animalTrait` 주입 |
-| `features/convert-to-guinea/ui/StyleSelectModal.tsx` | **삭제** |
-| `features/convert-to-guinea/ui/AnimalSelectModal.tsx` | **신규 생성** |
-| `features/image-upload/ui/ImageCropModal.tsx` | 원형 크롭 + 가이드 문구 |
-| `widgets/converter/ui/ConverterWidget.tsx` | step/import 업데이트 |
+| 파일                                                  | 작업                                       |
+| ----------------------------------------------------- | ------------------------------------------ |
+| `entities/image-session/model/store.ts`               | `conversionMode` 제거 → `animalTrait` 추가 |
+| `features/convert-to-guinea/api/useConvertImage.ts`   | `mode` → `animalTrait`                     |
+| `app/api/convert/route.ts`                            | 프롬프트 재설계, `animalTrait` 주입        |
+| `features/convert-to-guinea/ui/StyleSelectModal.tsx`  | **삭제**                                   |
+| `features/convert-to-guinea/ui/AnimalSelectModal.tsx` | **신규 생성**                              |
+| `features/image-upload/ui/ImageCropModal.tsx`         | 원형 크롭 + 가이드 문구                    |
+| `widgets/converter/ui/ConverterWidget.tsx`            | step/import 업데이트                       |
 
 ---
 
 ## 🔄 v3 — img2img → text2img 전환 (Gemini Vision 분석 + Replicate flux-2-pro)
 
 ### 배경
+
 - 현재: 업로드 사진을 `flux-kontext-pro`(img2img)에 직접 입력 → 결과 품질 편차/실패율 이슈
 - 변경: 2단계 파이프라인
   1. **1단계 (분석):** Gemini `gemini-2.5-flash-lite`(멀티모달)로 업로드 사진을 분석 → 얼굴형/헤어스타일/헤어컬러/액세서리 등을 영문 텍스트로 추출
@@ -276,22 +288,26 @@ Modify 3 (스토어)
 > 1 phase씩 진행 후 검토 요청 → 승인 시 다음 phase 진행
 
 ### Phase 1 (P0) — 즉시 처리
+
 - [x] 죽은 코드 제거: `ImageDropZone.tsx`, `ImagePreview.tsx` 및 `index.ts` export 정리
 - [x] `TRAIT_MAP`(서버) ↔ `ANIMAL_CHIPS`(클라이언트) 단일화 — `shared/lib/animal-traits.ts`로 통합
 
 ### Phase 2 (P1) — API route 분리
-- [ ] `src/shared/lib/rate-limit.ts` 분리 (checkRateLimit, getClientIP, RATE_LIMIT_MAX/WINDOW)
-- [ ] `src/features/convert-to-guinea/server/analyzeFace.ts` 분리 (FaceFeatures, ANALYSIS_PROMPT, ANALYSIS_SCHEMA, analyzeFace)
-- [ ] `src/features/convert-to-guinea/server/buildPrompt.ts` 분리 (PROMPT_BASE, TRAIT_MAP, buildPrompt)
-- [ ] `src/features/convert-to-guinea/server/generateImage.ts` 분리 (Replicate 클라이언트 + 생성 함수)
-- [ ] `route.ts`를 오케스트레이션만 남도록 정리
+
+- [x] `src/shared/lib/rate-limit.ts` 분리 (checkRateLimit, getClientIP, RATE_LIMIT_MAX/WINDOW)
+- [x] `src/features/convert-to-guinea/server/analyzeFace.ts` 분리 (FaceFeatures, ANALYSIS_PROMPT, ANALYSIS_SCHEMA, analyzeFace)
+- [x] `src/features/convert-to-guinea/server/buildPrompt.ts` 분리 (PROMPT_BASE, TRAIT_MAP, buildPrompt)
+- [x] `src/features/convert-to-guinea/server/generateImage.ts` 분리 (Replicate 클라이언트 + 생성 함수)
+- [x] `route.ts`를 오케스트레이션만 남도록 정리
 
 ### Phase 3 (P2) — 유틸 추출 & 중복 제거
+
 - [ ] `getCroppedBlob` → `shared/lib/image.ts`
 - [ ] `downloadImage` → `shared/lib`
 - [ ] `processFile` 중복 제거 (Phase 1 결과에 따라 범위 조정)
 
 ### Phase 4 (P3) — 컴포넌트 분리
+
 - [ ] `ConverterWidget`의 idle/error 화면 → 피쳐로 추출
 - [ ] `ConversionResult` → `ResultLightbox` + `ResultCardView` 분리
 - [ ] (선택) UploadOptionCard, Avatar, FullscreenSheet, ChipSelector, 아이콘 모음 정리
@@ -299,8 +315,18 @@ Modify 3 (스토어)
 ### 검토 (각 phase 완료 후 작성)
 
 **Phase 1 완료**
+
 - `ImageDropZone.tsx`, `ImagePreview.tsx` 삭제 + `features/image-upload/index.ts` export 정리
 - `src/shared/lib/animal-traits.ts` 신규: `ANIMAL_TRAIT_MAP`, `ANIMAL_TRAIT_KEYS` export
 - `route.ts`의 로컬 `TRAIT_MAP` 제거 → `ANIMAL_TRAIT_MAP` import로 대체
 - `AnimalSelectModal.tsx`의 `ANIMAL_CHIPS` 배열 제거 → `ANIMAL_TRAIT_KEYS` 사용
 - `tsc --noEmit` 통과, 잔여 참조 없음 확인
+
+**Phase 2 완료**
+
+- `src/shared/lib/rate-limit.ts` 신규: `getClientIP`, `checkRateLimit` (RATE_LIMIT_MAX/WINDOW 포함)
+- `src/features/convert-to-guinea/server/analyzeFace.ts` 신규: `FaceFeatures`, `analyzeFace` (Gemini 클라이언트·프롬프트·스키마 포함)
+- `src/features/convert-to-guinea/server/buildPrompt.ts` 신규: `buildPrompt` (PROMPT_BASE 포함)
+- `src/features/convert-to-guinea/server/generateImage.ts` 신규: `generateImage` (Replicate 클라이언트 포함)
+- `route.ts`는 rate limit 체크 → analyzeFace → buildPrompt → generateImage 호출 + 에러 처리만 남김 (245줄 → 67줄)
+- `tsc --noEmit` 통과
