@@ -4,17 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useImageSessionStore } from "@entities/image-session";
 import { useConvertImage } from "../api/useConvertImage";
 import { Chip, ScreenHeader } from "@shared/ui";
-
-const ANIMAL_CHIPS = [
-  "고양이상",
-  "강아지상",
-  "토끼상",
-  "곰상",
-  "여우상",
-  "사슴상",
-  "햄찌상",
-  "판다상",
-];
+import { ANIMAL_TRAIT_KEYS } from "@shared/lib";
 
 export function AnimalSelectModal() {
   const { croppedImage, setAnimalTrait, setStep } = useImageSessionStore();
@@ -97,7 +87,7 @@ export function AnimalSelectModal() {
 
       {/* 동물상 칩 */}
       <div className="flex flex-wrap gap-2 justify-center mb-6">
-        {ANIMAL_CHIPS.map((chip) => (
+        {ANIMAL_TRAIT_KEYS.map((chip) => (
           <Chip
             key={chip}
             selected={selected === chip}

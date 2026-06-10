@@ -268,3 +268,39 @@ Modify 3 (스토어)
 - [ ] 동작 검증: 실제 사진 업로드 → 1단계 텍스트 추출 결과 로그 확인 → 2단계 이미지 생성 결과 확인
 
 ### 검토 (작업 완료 후 작성)
+
+---
+
+## 🔄 v4 — 패키지 리팩토링 (route 분리 / 컴포넌트화 / lib 정리)
+
+> 1 phase씩 진행 후 검토 요청 → 승인 시 다음 phase 진행
+
+### Phase 1 (P0) — 즉시 처리
+- [x] 죽은 코드 제거: `ImageDropZone.tsx`, `ImagePreview.tsx` 및 `index.ts` export 정리
+- [x] `TRAIT_MAP`(서버) ↔ `ANIMAL_CHIPS`(클라이언트) 단일화 — `shared/lib/animal-traits.ts`로 통합
+
+### Phase 2 (P1) — API route 분리
+- [ ] `src/shared/lib/rate-limit.ts` 분리 (checkRateLimit, getClientIP, RATE_LIMIT_MAX/WINDOW)
+- [ ] `src/features/convert-to-guinea/server/analyzeFace.ts` 분리 (FaceFeatures, ANALYSIS_PROMPT, ANALYSIS_SCHEMA, analyzeFace)
+- [ ] `src/features/convert-to-guinea/server/buildPrompt.ts` 분리 (PROMPT_BASE, TRAIT_MAP, buildPrompt)
+- [ ] `src/features/convert-to-guinea/server/generateImage.ts` 분리 (Replicate 클라이언트 + 생성 함수)
+- [ ] `route.ts`를 오케스트레이션만 남도록 정리
+
+### Phase 3 (P2) — 유틸 추출 & 중복 제거
+- [ ] `getCroppedBlob` → `shared/lib/image.ts`
+- [ ] `downloadImage` → `shared/lib`
+- [ ] `processFile` 중복 제거 (Phase 1 결과에 따라 범위 조정)
+
+### Phase 4 (P3) — 컴포넌트 분리
+- [ ] `ConverterWidget`의 idle/error 화면 → 피쳐로 추출
+- [ ] `ConversionResult` → `ResultLightbox` + `ResultCardView` 분리
+- [ ] (선택) UploadOptionCard, Avatar, FullscreenSheet, ChipSelector, 아이콘 모음 정리
+
+### 검토 (각 phase 완료 후 작성)
+
+**Phase 1 완료**
+- `ImageDropZone.tsx`, `ImagePreview.tsx` 삭제 + `features/image-upload/index.ts` export 정리
+- `src/shared/lib/animal-traits.ts` 신규: `ANIMAL_TRAIT_MAP`, `ANIMAL_TRAIT_KEYS` export
+- `route.ts`의 로컬 `TRAIT_MAP` 제거 → `ANIMAL_TRAIT_MAP` import로 대체
+- `AnimalSelectModal.tsx`의 `ANIMAL_CHIPS` 배열 제거 → `ANIMAL_TRAIT_KEYS` 사용
+- `tsc --noEmit` 통과, 잔여 참조 없음 확인
