@@ -241,3 +241,30 @@ Modify 3 (스토어)
 | `features/convert-to-guinea/ui/AnimalSelectModal.tsx` | **신규 생성** |
 | `features/image-upload/ui/ImageCropModal.tsx` | 원형 크롭 + 가이드 문구 |
 | `widgets/converter/ui/ConverterWidget.tsx` | step/import 업데이트 |
+
+---
+
+## 🔄 v3 — img2img → text2img 전환 (Gemini Vision 분석 + Replicate flux-2-pro)
+
+### 배경
+- 현재: 업로드 사진을 `flux-kontext-pro`(img2img)에 직접 입력 → 결과 품질 편차/실패율 이슈
+- 변경: 2단계 파이프라인
+  1. **1단계 (분석):** Gemini `gemini-2.5-flash-lite`(멀티모달)로 업로드 사진을 분석 → 얼굴형/헤어스타일/헤어컬러/액세서리 등을 영문 텍스트로 추출
+  2. **2단계 (생성):** 추출된 텍스트 + 기니피그 기본 프롬프트 + 동물상 트레잇(`TRAIT_MAP`)을 결합하여 `black-forest-labs/flux-2-pro`(text2img)로 이미지 생성
+
+### 작업 항목
+
+- [ ] `@google/genai` 패키지 설치
+- [ ] `.env.local`, `.env.example`에 `GEMINI_API_KEY` 추가
+- [ ] `src/app/api/convert/route.ts` 수정
+  - [ ] Gemini 클라이언트 초기화 (`GEMINI_API_KEY`)
+  - [ ] 1단계: 업로드 이미지를 `gemini-2.5-flash-lite`에 전달, 얼굴형/헤어스타일/헤어컬러/액세서리를 간결한 영문 묘사로 추출하는 프롬프트 작성 (이미지의 신원 정보가 아닌, 캐릭터 생성에 필요한 시각적 특징만 추출하도록 제한)
+  - [ ] `PROMPT_BASE`를 img2img 표현("Transform the face in this photo...")에서 text2img용 자기완결 프롬프트로 재작성 (1단계 추출 텍스트를 삽입할 자리 마련)
+  - [ ] `TRAIT_MAP` 결합 로직은 기존 그대로 유지
+  - [ ] 2단계: `replicate.run("black-forest-labs/flux-2-pro", { input: { prompt, aspect_ratio, output_format, ... } })` 호출 (`input_image` 제거, flux-2-pro 입력 스키마 확인 후 파라미터 맞춤)
+  - [ ] 에러 처리: Gemini 호출 실패(쿼터 초과/세이프티 차단 등)와 Replicate 호출 실패를 구분한 메시지 처리
+  - [ ] `maxDuration` 재검토 (직렬 2단계 호출이라 120s로 충분한지 확인, 필요시 조정)
+- [ ] 프론트엔드(`useConvertImage.ts`, 업로드 UI 등)는 변경 없음 — 사진 업로드 UX 그대로 유지, FormData로 이미지 전송
+- [ ] 동작 검증: 실제 사진 업로드 → 1단계 텍스트 추출 결과 로그 확인 → 2단계 이미지 생성 결과 확인
+
+### 검토 (작업 완료 후 작성)

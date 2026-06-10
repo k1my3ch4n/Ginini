@@ -1,23 +1,119 @@
 import { NextRequest, NextResponse } from "next/server";
 import Replicate, { type FileOutput } from "replicate";
+import { GoogleGenAI, Type } from "@google/genai";
 
 // AI 추론이 최대 120초 걸릴 수 있어서 Next.js route 타임아웃을 연장
 export const maxDuration = 120;
 
-const MODEL = "black-forest-labs/flux-kontext-pro" as const;
+const MODEL = "black-forest-labs/flux-2-pro" as const;
+const ANALYSIS_MODEL = "gemini-2.5-flash-lite" as const;
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 });
 
+const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+const ANALYSIS_PROMPT =
+  "Look at the person's face in this photo and describe the visual features needed to recreate them " +
+  "as a cartoon character: face shape, eye shape and color, eyebrow style, hairstyle (length, texture, bangs), " +
+  "hair color, and any visible accessories on the head or face (glasses, earrings, hairpins, etc.). " +
+  "Focus only on visual appearance. Do not mention age, gender, ethnicity, or identity. " +
+  "If no accessories are visible, use \"none\".";
+
+const ANALYSIS_SCHEMA = {
+  type: Type.OBJECT,
+  properties: {
+    faceShape: { type: Type.STRING },
+    eyeShape: { type: Type.STRING },
+    eyeColor: { type: Type.STRING },
+    eyebrows: { type: Type.STRING },
+    hairstyle: { type: Type.STRING },
+    hairColor: { type: Type.STRING },
+    accessories: { type: Type.STRING },
+  },
+  required: [
+    "faceShape",
+    "eyeShape",
+    "eyeColor",
+    "eyebrows",
+    "hairstyle",
+    "hairColor",
+    "accessories",
+  ],
+};
+
+export interface FaceFeatures {
+  faceShape: string;
+  eyeShape: string;
+  eyeColor: string;
+  eyebrows: string;
+  hairstyle: string;
+  hairColor: string;
+  accessories: string;
+}
+
+async function analyzeFace(
+  arrayBuffer: ArrayBuffer,
+  mimeType: string,
+): Promise<FaceFeatures> {
+  const base64Data = Buffer.from(arrayBuffer).toString("base64");
+
+  const response = await genAI.models.generateContent({
+    model: ANALYSIS_MODEL,
+    contents: [
+      {
+        role: "user",
+        parts: [
+          { text: ANALYSIS_PROMPT },
+          { inlineData: { mimeType, data: base64Data } },
+        ],
+      },
+    ],
+    config: {
+      responseMimeType: "application/json",
+      responseSchema: ANALYSIS_SCHEMA,
+    },
+  });
+
+  const text = response.text?.trim();
+
+  if (!text) {
+    throw new Error("Gemini가 이미지 분석 결과를 반환하지 않았습니다.");
+  }
+
+  return JSON.parse(text) as FaceFeatures;
+}
+
 const PROMPT_BASE =
-  "Redraw the person in this photo as a cute kawaii anthropomorphic guinea pig character that is fully dressed in the same outfit as the person. " +
-  "The character MUST be wearing clothes — this is required. The outfit must exactly match the clothing visible in the input photo: same garment type, same colors, same style. " +
-  "ACCESSORIES: Reproduce every accessory visible in the photo (bags, glasses, hats, jewelry, etc.) on the character. If no accessories are visible in the photo, add none. " +
-  "HAIR: Give the guinea pig the same hairstyle, hair length, and hair color as the person in the photo. " +
-  "FACE: Reflect the person's unique facial features (eye shape, eyebrow style, face shape, expression) so the character is recognizable as this specific person. " +
-  "GUINEA PIG FEATURES: small rounded ears (NOT pointy), tiny Y-shaped nose pointing downward (NOT upturned pig snout), round compact head, chubby cheeks, NO tail, short stubby legs, round chubby torso. Short brushstroke fur texture. Large round cute eyes with a single white highlight dot. Small rounded mitten paws, NO claws. " +
-  "Art style: 2D cartoon illustration, clean black ink outlines, cel-shading, NOT 3D rendered. Clean white background.";
+  "Generate a cute kawaii anthropomorphic guinea pig character, " +
+  "as a close-up head/face portrait suitable for a profile picture. " +
+  "GUINEA PIG FIRST: Prioritize guinea pig characteristics over human facial accuracy — small rounded ears (NOT pointy), " +
+  "tiny Y-shaped nose pointing downward (NOT upturned pig snout), round compact head, chubby round cheeks, " +
+  "large round cute eyes with a single white highlight dot, short brushstroke fur texture covering the face. " +
+  "The result should clearly read as a guinea pig character first, with the person's likeness as a subtle accent. " +
+  "FRAMING: This is a tight head-only avatar icon. No neck, shoulders, collar, or clothing should be visible — only the head/face remains, cropped immediately below the chin/jawline. " +
+  "Do NOT add a hat, hood, or any headwear that extends down over the shoulders. The guinea pig head should fill most of the frame. " +
+  "Art style: 2D cartoon illustration, clean black ink outlines, cel-shading, NOT 3D rendered. Centered composition, clean white background.";
+
+function buildPrompt(features: FaceFeatures, traitDescription: string): string {
+  const accessoriesPart =
+    features.accessories.toLowerCase() === "none"
+      ? ""
+      : ` ACCESSORIES: Add ${features.accessories}, positioned on the face or ears.`;
+
+  const traitPart = traitDescription
+    ? ` The guinea pig character should subtly reflect the impression of a ${traitDescription}: adopt characteristic eye shape, face proportions, and overall vibe of that animal type, while remaining a guinea pig.`
+    : "";
+
+  return (
+    PROMPT_BASE +
+    ` FACE: Subtly echo these features — face shape: ${features.faceShape}, eye shape: ${features.eyeShape}, eye color: ${features.eyeColor}, eyebrows: ${features.eyebrows} — just enough to feel personal.` +
+    ` HAIR: Give the guinea pig a ${features.hairColor} ${features.hairstyle} hairstyle, adapted to sit naturally on its round head.` +
+    accessoriesPart +
+    traitPart
+  );
+}
 
 const TRAIT_MAP: Record<string, string> = {
   고양이상: "cat-like almond eyes and sharp graceful features",
@@ -85,19 +181,18 @@ export async function POST(req: NextRequest) {
     }
 
     const traitDescription = TRAIT_MAP[animalTrait] ?? animalTrait;
-    const prompt = traitDescription
-      ? PROMPT_BASE +
-        ` The guinea pig character should subtly reflect the impression of a ${traitDescription}: adopt characteristic eye shape, face proportions, and overall vibe of that animal type, while remaining a guinea pig.`
-      : PROMPT_BASE;
 
     const arrayBuffer = await image.arrayBuffer();
-    const blob = new Blob([arrayBuffer], { type: image.type });
+
+    const faceFeatures = await analyzeFace(arrayBuffer, image.type);
+    console.log("[convert] Gemini face analysis:", faceFeatures);
+
+    const prompt = buildPrompt(faceFeatures, traitDescription);
 
     const output = (await replicate.run(MODEL, {
       input: {
-        input_image: blob,
         prompt,
-        aspect_ratio: "match_input_image",
+        aspect_ratio: "1:1",
         output_format: "jpg",
         safety_tolerance: 2,
       },
@@ -110,7 +205,7 @@ export async function POST(req: NextRequest) {
       { headers: { "X-RateLimit-Remaining": String(remaining) } },
     );
   } catch (err) {
-    console.error("[convert] Replicate error:", err);
+    console.error("[convert] error:", err);
 
     const message =
       err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.";
