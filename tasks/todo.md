@@ -302,15 +302,22 @@ Modify 3 (스토어)
 
 ### Phase 3 (P2) — 유틸 추출 & 중복 제거
 
-- [ ] `getCroppedBlob` → `shared/lib/image.ts`
-- [ ] `downloadImage` → `shared/lib`
-- [ ] `processFile` 중복 제거 (Phase 1 결과에 따라 범위 조정)
+- [x] `getCroppedBlob` → `shared/lib/image.ts`
+- [x] `downloadImage` → `shared/lib`
+- [x] `processFile` 중복 제거 (Phase 1 결과에 따라 범위 조정)
 
 ### Phase 4 (P3) — 컴포넌트 분리
 
 - [ ] `ConverterWidget`의 idle/error 화면 → 피쳐로 추출
 - [ ] `ConversionResult` → `ResultLightbox` + `ResultCardView` 분리
 - [ ] (선택) UploadOptionCard, Avatar, FullscreenSheet, ChipSelector, 아이콘 모음 정리
+
+### Phase 5 (P3) — 코드 스타일 / lint 정리
+
+- [ ] `if (!A) return;` / `if (A) B;` 형태의 단일 문장 if를 전부 중괄호 블록으로 변경 (현재 `AnimalSelectModal.tsx`, `ConversionResult.tsx`, `ConvertingLoader.tsx`, `shared/lib/kakao.ts`, `shared/lib/image.ts`는 적용 완료, 다른 파일들은 전수 점검 필요)
+- [ ] ESLint `curly: ["error", "all"]` 규칙 추가 검토 — 추가 시 위 작업을 `eslint --fix`로 일괄 적용 가능
+- [x] `AnimalSelectModal.tsx` `react-hooks/set-state-in-effect` 에러 해결 (croppedImage thumbnail URL 생성 로직을 effect 밖으로 이동 또는 다른 패턴으로 변경)
+- [x] `AnimalSelectModal.tsx` 썸네일 `<img>`의 `@next/next/no-img-element` 경고 처리 (eslint-disable 주석 또는 next/image 적용)
 
 ### 검토 (각 phase 완료 후 작성)
 
@@ -329,4 +336,12 @@ Modify 3 (스토어)
 - `src/features/convert-to-guinea/server/buildPrompt.ts` 신규: `buildPrompt` (PROMPT_BASE 포함)
 - `src/features/convert-to-guinea/server/generateImage.ts` 신규: `generateImage` (Replicate 클라이언트 포함)
 - `route.ts`는 rate limit 체크 → analyzeFace → buildPrompt → generateImage 호출 + 에러 처리만 남김 (245줄 → 67줄)
+- `tsc --noEmit` 통과
+
+**Phase 3 완료**
+
+- `src/shared/lib/image.ts`에 `getCroppedBlob`(canvas crop 변환), `downloadImage`(blob 다운로드) 추가, `index.ts`에서 export
+- `ImageCropModal.tsx`의 로컬 `getCroppedBlob` 제거 → `@shared/lib` import로 대체
+- `ConversionResult.tsx`의 로컬 `downloadImage` 제거 → `@shared/lib` import로 대체
+- `processFile`은 `UploadScreen.tsx` 1곳에만 존재 (Phase 1에서 이미 중복 제거됨) — 추가 작업 불필요
 - `tsc --noEmit` 통과

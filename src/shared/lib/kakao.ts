@@ -30,10 +30,14 @@ interface KakaoShareConfig {
 }
 
 export function shareToKakao(imageUrl: string) {
-  if (typeof window === "undefined" || !window.Kakao) return;
+  if (typeof window === "undefined" || !window.Kakao) {
+    return;
+  }
 
   const appKey = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
-  if (!appKey) return;
+  if (!appKey) {
+    return;
+  }
 
   if (!window.Kakao.isInitialized()) {
     window.Kakao.init(appKey);

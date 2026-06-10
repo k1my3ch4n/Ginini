@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useImageSessionStore } from "@entities/image-session";
 import { useConvertImage } from "../api/useConvertImage";
 import { Chip, ScreenHeader } from "@shared/ui";
@@ -13,14 +13,18 @@ export function AnimalSelectModal() {
   const [customInput, setCustomInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
+  const thumbnailUrl = useMemo(
+    () => (croppedImage ? URL.createObjectURL(croppedImage) : null),
+    [croppedImage],
+  );
 
   useEffect(() => {
-    if (!croppedImage) return;
-    const url = URL.createObjectURL(croppedImage);
-    setThumbnailUrl(url);
-    return () => URL.revokeObjectURL(url);
-  }, [croppedImage]);
+    return () => {
+      if (thumbnailUrl) {
+        URL.revokeObjectURL(thumbnailUrl);
+      }
+    };
+  }, [thumbnailUrl]);
 
   const handleChipClick = (chip: string) => {
     setSelected((prev) => (prev === chip ? null : chip));
@@ -33,7 +37,9 @@ export function AnimalSelectModal() {
   };
 
   const handleConvert = (trait: string) => {
-    if (!croppedImage || isPending) return;
+    if (!croppedImage || isPending) {
+      return;
+    }
     setAnimalTrait(trait);
     convert({ blob: croppedImage, animalTrait: trait });
   };
@@ -49,7 +55,10 @@ export function AnimalSelectModal() {
 
   return (
     <form
-      onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit();
+      }}
       className="flex flex-col w-full min-h-dvh bg-[#FBF7F1] px-5 pt-6 pb-10"
     >
       <ScreenHeader
@@ -72,6 +81,7 @@ export function AnimalSelectModal() {
       {thumbnailUrl && (
         <div className="flex justify-center mb-5">
           <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-[#E6A57E] shadow-md">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={thumbnailUrl}
               alt="내 사진"

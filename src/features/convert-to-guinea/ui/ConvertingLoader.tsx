@@ -16,7 +16,9 @@ export function ConvertingLoader() {
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 90) return 90;
+        if (prev >= 90) {
+          return 90;
+        }
         return Math.min(90, prev + Math.random() * 12 + 3);
       });
     }, 500);
