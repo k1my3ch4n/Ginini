@@ -1,9 +1,11 @@
 import Replicate, { type FileOutput } from "replicate";
+import { getRequiredEnv } from "@shared/lib/env";
+import { GenerationFailedError, GenerationQuotaError } from "./errors";
 
 const MODEL = "black-forest-labs/flux-2-pro" as const;
 
 const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN,
+  auth: getRequiredEnv("REPLICATE_API_TOKEN"),
 });
 
 function isUnsupportedSeedError(error: unknown): boolean {
@@ -11,9 +13,15 @@ function isUnsupportedSeedError(error: unknown): boolean {
     return false;
   }
 
-  return /seed|unknown|unrecognized|unexpected|validation/i.test(
-    error.message,
-  );
+  return /seed|unknown|unrecognized|unexpected|validation/i.test(error.message);
+}
+
+function isQuotaError(error: unknown): boolean {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  return /402|insufficient/i.test(error.message);
 }
 
 export async function generateImage(
@@ -31,25 +39,35 @@ export async function generateImage(
   let output: FileOutput;
 
   try {
-    output = (await replicate.run(MODEL, { input })) as FileOutput;
+    try {
+      output = (await replicate.run(MODEL, { input })) as FileOutput;
+    } catch (error) {
+      if (!isUnsupportedSeedError(error)) {
+        throw error;
+      }
+
+      console.warn(
+        "[convert] Replicate rejected the seed input; retrying without seed.",
+        error instanceof Error ? error.message : error,
+      );
+
+      output = (await replicate.run(MODEL, {
+        input: {
+          prompt: input.prompt,
+          aspect_ratio: input.aspect_ratio,
+          output_format: input.output_format,
+          safety_tolerance: input.safety_tolerance,
+        },
+      })) as FileOutput;
+    }
   } catch (error) {
-    if (!isUnsupportedSeedError(error)) {
-      throw error;
+    if (isQuotaError(error)) {
+      throw new GenerationQuotaError();
     }
 
-    console.warn(
-      "[convert] Replicate rejected the seed input; retrying without seed.",
-      error instanceof Error ? error.message : error,
+    throw new GenerationFailedError(
+      error instanceof Error ? error.message : undefined,
     );
-
-    output = (await replicate.run(MODEL, {
-      input: {
-        prompt: input.prompt,
-        aspect_ratio: input.aspect_ratio,
-        output_format: input.output_format,
-        safety_tolerance: input.safety_tolerance,
-      },
-    })) as FileOutput;
   }
 
   return output.url().href;

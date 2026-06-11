@@ -1,15 +1,4 @@
-import type { FaceFeatures } from "./analyzeFace";
-
-function isAbsent(value: string): boolean {
-  const normalized = value.trim().toLowerCase();
-
-  return (
-    normalized === "" ||
-    normalized === "none" ||
-    normalized === "not visible" ||
-    normalized === "unclear"
-  );
-}
+import { isAbsent, type FaceFeatures } from "./analyzeFace";
 
 function getHairTemplate(features: FaceFeatures): string {
   const hairText = [

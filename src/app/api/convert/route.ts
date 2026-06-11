@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ANIMAL_TRAIT_MAP } from "@shared/lib/animal-traits";
+import {
+  ALLOWED_IMAGE_TYPES,
+  MAX_IMAGE_SIZE_BYTES,
+  MAX_IMAGE_SIZE_MB,
+} from "@shared/lib/image";
 import { checkRateLimit, getClientIP } from "@shared/lib/rate-limit";
 import { sanitizeCustomTrait } from "@shared/lib/sanitize";
 import { analyzeFace } from "@features/convert-to-guinea/server/analyzeFace";
 import { buildPrompt } from "@features/convert-to-guinea/server/buildPrompt";
+import { ConvertError } from "@features/convert-to-guinea/server/errors";
 import { generateImage } from "@features/convert-to-guinea/server/generateImage";
 
 // AI 추론이 최대 120초 걸릴 수 있어서 Next.js route 타임아웃을 연장
@@ -63,13 +69,30 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (
+      !ALLOWED_IMAGE_TYPES.includes(
+        image.type as (typeof ALLOWED_IMAGE_TYPES)[number],
+      )
+    ) {
+      return NextResponse.json(
+        { message: "JPG, PNG, WebP 형식의 이미지만 업로드할 수 있습니다." },
+        { status: 400 },
+      );
+    }
+
+    if (image.size > MAX_IMAGE_SIZE_BYTES) {
+      return NextResponse.json(
+        { message: `파일 크기는 ${MAX_IMAGE_SIZE_MB}MB 이하여야 합니다.` },
+        { status: 400 },
+      );
+    }
+
     const traitDescription = getTraitDescription(animalTrait);
 
     const arrayBuffer = await image.arrayBuffer();
     const seed = getStableGenerationSeed();
 
     const faceFeatures = await analyzeFace(arrayBuffer, image.type);
-    console.log("[convert] Gemini face analysis:", faceFeatures);
 
     const prompt = buildPrompt(faceFeatures, traitDescription);
 
@@ -82,15 +105,15 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("[convert] error:", err);
 
-    const message =
-      err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.";
-
-    if (message.includes("402") || message.includes("insufficient")) {
+    if (err instanceof ConvertError) {
       return NextResponse.json(
-        { message: "API 크레딧이 부족합니다." },
-        { status: 402 },
+        { message: err.message },
+        { status: err.status },
       );
     }
+
+    const message =
+      err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.";
 
     return NextResponse.json(
       {

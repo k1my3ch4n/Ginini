@@ -1,8 +1,10 @@
 import { GoogleGenAI, Type } from "@google/genai";
+import { getRequiredEnv } from "@shared/lib/env";
+import { AnalysisFailedError, FaceNotDetectedError } from "./errors";
 
 const ANALYSIS_MODEL = "gemini-2.5-flash-lite" as const;
 
-const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const genAI = new GoogleGenAI({ apiKey: getRequiredEnv("GEMINI_API_KEY") });
 
 const ANALYSIS_PROMPT =
   "Analyze only the visible facial appearance in this cropped photo. " +
@@ -74,6 +76,34 @@ export interface FaceFeatures {
   guineaPigTranslation: string;
 }
 
+export function isAbsent(value: string): boolean {
+  const normalized = value.trim().toLowerCase();
+
+  return (
+    normalized === "" ||
+    normalized === "none" ||
+    normalized === "not visible" ||
+    normalized === "unclear"
+  );
+}
+
+const CORE_FEATURE_KEYS = [
+  "faceSilhouette",
+  "eyes",
+  "eyebrows",
+  "hairstyle",
+  "noseMouth",
+  "expression",
+] as const satisfies readonly (keyof FaceFeatures)[];
+
+function hasDetectedFace(features: FaceFeatures): boolean {
+  const absentCount = CORE_FEATURE_KEYS.filter((key) =>
+    isAbsent(features[key]),
+  ).length;
+
+  return absentCount < 4;
+}
+
 export async function analyzeFace(
   arrayBuffer: ArrayBuffer,
   mimeType: string,
@@ -101,13 +131,27 @@ export async function analyzeFace(
     },
   });
 
+  if (response.promptFeedback?.blockReason) {
+    throw new FaceNotDetectedError();
+  }
+
   const text = response.text?.trim();
 
   if (!text) {
-    throw new Error("Gemini가 이미지 분석 결과를 반환하지 않았습니다.");
+    throw new AnalysisFailedError();
   }
 
-  const features = JSON.parse(text) as FaceFeatures;
+  let features: FaceFeatures;
+
+  try {
+    features = JSON.parse(text) as FaceFeatures;
+  } catch {
+    throw new AnalysisFailedError();
+  }
+
+  if (!hasDetectedFace(features)) {
+    throw new FaceNotDetectedError();
+  }
 
   return {
     ...features,

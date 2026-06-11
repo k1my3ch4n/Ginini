@@ -1,23 +1,31 @@
 import type { PixelCrop } from "react-image-crop";
 
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
-const MAX_SIZE_MB = 10;
-const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+export const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+] as const;
+export const MAX_IMAGE_SIZE_MB = 10;
+export const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
 
 export function validateImageFile(file: File): {
   valid: boolean;
   error?: string;
 } {
-  if (!ALLOWED_TYPES.includes(file.type as (typeof ALLOWED_TYPES)[number])) {
+  if (
+    !ALLOWED_IMAGE_TYPES.includes(
+      file.type as (typeof ALLOWED_IMAGE_TYPES)[number],
+    )
+  ) {
     return {
       valid: false,
       error: "JPG, PNG, WebP 형식의 이미지만 업로드할 수 있습니다.",
     };
   }
-  if (file.size > MAX_SIZE_BYTES) {
+  if (file.size > MAX_IMAGE_SIZE_BYTES) {
     return {
       valid: false,
-      error: `파일 크기는 ${MAX_SIZE_MB}MB 이하여야 합니다.`,
+      error: `파일 크기는 ${MAX_IMAGE_SIZE_MB}MB 이하여야 합니다.`,
     };
   }
   return { valid: true };
