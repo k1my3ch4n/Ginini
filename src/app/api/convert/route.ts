@@ -8,6 +8,51 @@ import { generateImage } from "@features/convert-to-guinea/server/generateImage"
 // AI 추론이 최대 120초 걸릴 수 있어서 Next.js route 타임아웃을 연장
 export const maxDuration = 120;
 
+const CUSTOM_TRAIT_MAX_LENGTH = 50;
+const DEFAULT_GENERATION_SEED = 20250407;
+const UNSAFE_CUSTOM_TRAIT_CHARS = /[^0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ\s,.'()-]/g;
+const PROMPT_CONTROL_WORDS =
+  /\b(ignore|system|prompt|instruction|instructions|developer|assistant|user|role)\b/gi;
+
+function sanitizeCustomTrait(input: string): string {
+  return input
+    .normalize("NFKC")
+    .replace(UNSAFE_CUSTOM_TRAIT_CHARS, " ")
+    .replace(PROMPT_CONTROL_WORDS, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, CUSTOM_TRAIT_MAX_LENGTH);
+}
+
+function getTraitDescription(rawTrait: string): string {
+  const trait = rawTrait.trim();
+
+  if (!trait) {
+    return "";
+  }
+
+  const mappedTrait = ANIMAL_TRAIT_MAP[trait];
+
+  if (mappedTrait) {
+    return mappedTrait;
+  }
+
+  const sanitizedTrait = sanitizeCustomTrait(trait);
+
+  return sanitizedTrait
+    ? `custom visual impression keywords: ${sanitizedTrait}`
+    : "";
+}
+
+function getStableGenerationSeed(): number {
+  const seed = Number.parseInt(
+    process.env.IMAGE_GENERATION_SEED ?? String(DEFAULT_GENERATION_SEED),
+    10,
+  );
+
+  return Number.isFinite(seed) && seed > 0 ? seed : DEFAULT_GENERATION_SEED;
+}
+
 export async function POST(req: NextRequest) {
   const ip = getClientIP(req);
   const { allowed, remaining } = checkRateLimit(ip);
@@ -31,16 +76,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const traitDescription = ANIMAL_TRAIT_MAP[animalTrait] ?? animalTrait;
+    const traitDescription = getTraitDescription(animalTrait);
 
     const arrayBuffer = await image.arrayBuffer();
+    const seed = getStableGenerationSeed();
 
     const faceFeatures = await analyzeFace(arrayBuffer, image.type);
     console.log("[convert] Gemini face analysis:", faceFeatures);
 
     const prompt = buildPrompt(faceFeatures, traitDescription);
 
-    const resultUrl = await generateImage(prompt);
+    const resultUrl = await generateImage(prompt, seed);
 
     return NextResponse.json(
       { resultUrl },
