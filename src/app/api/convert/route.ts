@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ANIMAL_TRAIT_MAP } from "@shared/lib/animal-traits";
 import { checkRateLimit, getClientIP } from "@shared/lib/rate-limit";
+import { sanitizeCustomTrait } from "@shared/lib/sanitize";
 import { analyzeFace } from "@features/convert-to-guinea/server/analyzeFace";
 import { buildPrompt } from "@features/convert-to-guinea/server/buildPrompt";
 import { generateImage } from "@features/convert-to-guinea/server/generateImage";
@@ -8,21 +9,7 @@ import { generateImage } from "@features/convert-to-guinea/server/generateImage"
 // AI 추론이 최대 120초 걸릴 수 있어서 Next.js route 타임아웃을 연장
 export const maxDuration = 120;
 
-const CUSTOM_TRAIT_MAX_LENGTH = 50;
 const DEFAULT_GENERATION_SEED = 20250407;
-const UNSAFE_CUSTOM_TRAIT_CHARS = /[^0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ\s,.'()-]/g;
-const PROMPT_CONTROL_WORDS =
-  /\b(ignore|system|prompt|instruction|instructions|developer|assistant|user|role)\b/gi;
-
-function sanitizeCustomTrait(input: string): string {
-  return input
-    .normalize("NFKC")
-    .replace(UNSAFE_CUSTOM_TRAIT_CHARS, " ")
-    .replace(PROMPT_CONTROL_WORDS, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .slice(0, CUSTOM_TRAIT_MAX_LENGTH);
-}
 
 function getTraitDescription(rawTrait: string): string {
   const trait = rawTrait.trim();

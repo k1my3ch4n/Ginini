@@ -4,7 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useImageSessionStore } from "@entities/image-session";
 import { useConvertImage } from "../api/useConvertImage";
 import { Avatar, Chip, ScreenHeader } from "@shared/ui";
-import { ANIMAL_TRAIT_KEYS } from "@shared/lib";
+import { ANIMAL_TRAIT_KEYS, sanitizeCustomTrait } from "@shared/lib";
+import { useToast } from "@shared/model";
 
 export function AnimalSelectModal() {
   const { croppedImage, setAnimalTrait, setStep } = useImageSessionStore();
@@ -12,6 +13,7 @@ export function AnimalSelectModal() {
   const [selected, setSelected] = useState<string | null>(null);
   const [customInput, setCustomInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const { error: showError } = useToast();
 
   const thumbnailUrl = useMemo(
     () => (croppedImage ? URL.createObjectURL(croppedImage) : null),
@@ -45,8 +47,19 @@ export function AnimalSelectModal() {
   };
 
   const handleSubmit = () => {
-    const trait = customInput.trim() || selected || "";
-    handleConvert(trait);
+    const trimmedInput = customInput.trim();
+    if (trimmedInput) {
+      const sanitized = sanitizeCustomTrait(trimmedInput);
+      if (!sanitized) {
+        showError(
+          "입력하신 내용은 사용할 수 없어요. 다른 표현으로 적어주세요.",
+        );
+        return;
+      }
+      handleConvert(sanitized);
+      return;
+    }
+    handleConvert(selected || "");
   };
 
   const handleSkip = () => {

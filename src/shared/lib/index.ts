@@ -8,3 +8,4 @@ export {
   downloadImage,
 } from "./image";
 export { ANIMAL_TRAIT_MAP, ANIMAL_TRAIT_KEYS } from "./animal-traits";
+export { sanitizeCustomTrait, CUSTOM_TRAIT_MAX_LENGTH } from "./sanitize";
