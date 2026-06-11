@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 interface IdleScreenProps {
   onStart: () => void;
 }
@@ -36,6 +38,14 @@ export function IdleScreen({ onStart }: IdleScreenProps) {
       >
         예시 먼저 볼래
       </button>
+
+      {/* 약관/개인정보처리방침 링크 */}
+      <Link
+        href="/privacy"
+        className="mt-8 text-xs text-gray-300 hover:text-gray-500 transition-colors"
+      >
+        이용약관 및 개인정보처리방침
+      </Link>
     </div>
   );
 }

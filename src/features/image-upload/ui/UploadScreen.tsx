@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef } from "react";
+import Link from "next/link";
 import { validateImageFile, fileToDataURL } from "@shared/lib";
 import { useImageSessionStore } from "@entities/image-session";
 import { useToast } from "@shared/model";
@@ -68,6 +69,13 @@ export function UploadScreen() {
           onClick={() => albumRef.current?.click()}
         />
       </div>
+
+      <p className="text-center text-xs text-gray-400 mt-6">
+        업로드한 사진은 변환에만 사용되고 저장되지 않아요.{" "}
+        <Link href="/privacy" className="underline hover:text-gray-600 transition-colors">
+          자세히 보기
+        </Link>
+      </p>
     </div>
   );
 }
