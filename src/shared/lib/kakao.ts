@@ -29,14 +29,14 @@ interface KakaoShareConfig {
   }>;
 }
 
-export function shareToKakao(imageUrl: string) {
+export function shareToKakao(imageUrl: string): boolean {
   if (typeof window === "undefined" || !window.Kakao) {
-    return;
+    return false;
   }
 
   const appKey = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
   if (!appKey) {
-    return;
+    return false;
   }
 
   if (!window.Kakao.isInitialized()) {
@@ -60,4 +60,6 @@ export function shareToKakao(imageUrl: string) {
       },
     ],
   });
+
+  return true;
 }

@@ -52,8 +52,13 @@ export function ConversionResult() {
     if (!resultImage) {
       return;
     }
-    shareToKakao(resultImage);
-    success("카카오톡 공유를 시작했어요!");
+    if (shareToKakao(resultImage)) {
+      success("카카오톡 공유를 시작했어요!");
+    } else {
+      showError(
+        "카카오톡 공유를 사용할 수 없어요. 잠시 후 다시 시도해 주세요.",
+      );
+    }
   };
 
   const handleTwitterShare = () => {
