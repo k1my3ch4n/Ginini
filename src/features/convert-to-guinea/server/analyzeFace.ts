@@ -5,64 +5,73 @@ const ANALYSIS_MODEL = "gemini-2.5-flash-lite" as const;
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 const ANALYSIS_PROMPT =
-  "Look closely at the person's face in this photo and describe the visual features needed to recreate them " +
-  'as a cartoon character. Be specific and vivid rather than generic — for example, prefer "warm hazel-brown" ' +
-  'over "brown", or "thin and slightly arched" over "normal". Describe: ' +
-  "face shape (e.g. round, oval, square, heart-shaped, with notable jawline or cheek features); " +
-  "eye shape and color (size, tilt, lid shape, exact color tone); " +
-  "eyebrow style (thickness, shape, arch); " +
-  "nose shape (size and shape, e.g. small button nose, straight bridge, wide nostrils); " +
-  "mouth and lip shape (size, fullness, resting expression of the mouth); " +
-  "overall facial expression or vibe (e.g. bright and cheerful, calm and gentle, sharp and confident); " +
-  "hairstyle (length, texture, parting, bangs, volume); hair color (specific shade); " +
-  "any visible accessories on the head or face (glasses, earrings, hairpins, etc.); " +
-  "and the head pose / viewing angle of the photo (e.g. straight-on front view, slightly turned to the left, " +
-  "three-quarter view from the right, looking up, looking down). " +
-  "Focus only on visual appearance. Do not mention age, gender, ethnicity, or identity. " +
-  'If no accessories are visible, use "none".';
+  "Analyze only the visible facial appearance in this cropped photo. " +
+  "Return concise English JSON written as image-generation design notes for a cute guinea pig avatar. " +
+  "Do not identify the person. Do not mention age, gender, ethnicity, race, nationality, or identity. " +
+  'If a detail is unclear, use "unclear"; if it is not visible, use "not visible"; if there are no accessories, use "none". ' +
+  "Prefer specific visual language over generic words. " +
+  'For example, prefer "warm hazel-brown eyes" over "brown eyes", or "thin slightly arched brows" over "normal brows". ' +
+  "Extract traits that can be translated into a guinea pig character, not copied as a human face. " +
+  "Describe: faceSilhouette (outline, cheeks, jaw softness); eyes (size, shape, tilt, lid style, spacing, eye-smile quality, and color tone); " +
+  "eyebrows (thickness, arch, angle, softness or sharpness); hairstyle (length, texture, and overall style name); " +
+  "hairArchitecture (precise hair structure: center or off-center part location, left and right hair flow, hairline shape, visible forehead area, bangs or no bangs, side volume, top volume, and outer silhouette); " +
+  "hairColor (specific shade); noseMouth (visible nose and mouth impression, translated as expression rather than anatomy); " +
+  "expression (overall mood); accessories (glasses, earrings, hairpins, piercings, head accessories, or none); " +
+  "headPose (camera angle and head direction); signatureFeatures (exactly 3 recognizable visual traits to preserve, prioritizing hair silhouette, eye size and shape, brows, and expression over generic traits); " +
+  "likenessAnchor (one compact sentence combining the strongest resemblance cues: hair part and silhouette, eye size and shape, eyebrow placement, and smile mood); " +
+  "and guineaPigTranslation (how to adapt the person into a cute guinea pig face while keeping the character clearly non-human).";
 
 const ANALYSIS_SCHEMA = {
   type: Type.OBJECT,
   properties: {
-    faceShape: { type: Type.STRING },
-    eyeShape: { type: Type.STRING },
-    eyeColor: { type: Type.STRING },
+    faceSilhouette: { type: Type.STRING },
+    eyes: { type: Type.STRING },
     eyebrows: { type: Type.STRING },
-    noseShape: { type: Type.STRING },
-    mouthShape: { type: Type.STRING },
-    expression: { type: Type.STRING },
     hairstyle: { type: Type.STRING },
+    hairArchitecture: { type: Type.STRING },
     hairColor: { type: Type.STRING },
+    noseMouth: { type: Type.STRING },
+    expression: { type: Type.STRING },
     accessories: { type: Type.STRING },
     headPose: { type: Type.STRING },
+    signatureFeatures: {
+      type: Type.ARRAY,
+      items: { type: Type.STRING },
+    },
+    likenessAnchor: { type: Type.STRING },
+    guineaPigTranslation: { type: Type.STRING },
   },
   required: [
-    "faceShape",
-    "eyeShape",
-    "eyeColor",
+    "faceSilhouette",
+    "eyes",
     "eyebrows",
-    "noseShape",
-    "mouthShape",
-    "expression",
     "hairstyle",
+    "hairArchitecture",
     "hairColor",
+    "noseMouth",
+    "expression",
     "accessories",
     "headPose",
+    "signatureFeatures",
+    "likenessAnchor",
+    "guineaPigTranslation",
   ],
 };
 
 export interface FaceFeatures {
-  faceShape: string;
-  eyeShape: string;
-  eyeColor: string;
+  faceSilhouette: string;
+  eyes: string;
   eyebrows: string;
-  noseShape: string;
-  mouthShape: string;
-  expression: string;
   hairstyle: string;
+  hairArchitecture: string;
   hairColor: string;
+  noseMouth: string;
+  expression: string;
   accessories: string;
   headPose: string;
+  signatureFeatures: string[];
+  likenessAnchor: string;
+  guineaPigTranslation: string;
 }
 
 export async function analyzeFace(
@@ -85,6 +94,10 @@ export async function analyzeFace(
     config: {
       responseMimeType: "application/json",
       responseSchema: ANALYSIS_SCHEMA,
+      temperature: 0.1,
+      topP: 0.1,
+      candidateCount: 1,
+      seed: 20250407,
     },
   });
 
@@ -94,5 +107,12 @@ export async function analyzeFace(
     throw new Error("Gemini가 이미지 분석 결과를 반환하지 않았습니다.");
   }
 
-  return JSON.parse(text) as FaceFeatures;
+  const features = JSON.parse(text) as FaceFeatures;
+
+  return {
+    ...features,
+    signatureFeatures: Array.isArray(features.signatureFeatures)
+      ? features.signatureFeatures.slice(0, 3)
+      : [],
+  };
 }
