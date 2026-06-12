@@ -47,6 +47,21 @@ function getEyeTemplate(features: FaceFeatures): string {
   );
 }
 
+const GENDER_STYLING_MAP: Record<string, string> = {
+  masculine:
+    "Style the guinea pig with a masculine-leaning presentation: no eyelashes, no lipstick or lip tint, no blush, and a simple unisex hairstyle silhouette.",
+  feminine:
+    "Style the guinea pig with a feminine-leaning presentation: subtle eyelashes and soft natural blush are okay, kept cute rather than heavily made up.",
+  neutral:
+    "Keep the guinea pig's styling gender-neutral: no eyelashes, no lipstick or lip tint, no gendered makeup cues.",
+};
+
+function getGenderStyling(features: FaceFeatures): string {
+  const key = features.genderPresentation.trim().toLowerCase();
+
+  return GENDER_STYLING_MAP[key] ?? GENDER_STYLING_MAP.neutral;
+}
+
 export function buildPrompt(
   features: FaceFeatures,
   traitDescription: string,
@@ -68,9 +83,10 @@ export function buildPrompt(
     "The image must be a single front-facing guinea pig head portrait on a clean white background.",
     "Use a fixed avatar template: perfectly centered round compact guinea pig head, small rounded ears, plush cheeks, soft short fur, tiny downward Y-shaped nose, small rounded muzzle, closed curved smile.",
     "The guinea pig head fills 92 percent of the square. The lower edge is a smooth round cheek-and-chin fur boundary touching the bottom of the icon.",
-    "Visible subject area: face, ears, cheek fur, chin fur, and the person's hairstyle only.",
-    "Use a simple warm ivory or light cream guinea pig fur base with subtle blush and minimal markings.",
+    "Visible subject area: face, ears, cheek fur, chin fur, and the person's hairstyle only. Do not depict hands, paws, arms, feet, legs, or any body parts below the neck — no limbs should appear anywhere in the frame.",
+    "Use a simple warm ivory or light cream guinea pig fur base with subtle blush and minimal markings. The fur color is always light cream or ivory regardless of the person's skin tone in the source photo — do not darken or tint the fur to match skin tone.",
     "Preserve likeness before adding cuteness.",
+    getGenderStyling(features),
     `Primary likeness anchor: ${features.likenessAnchor}.`,
     signatureFeatures
       ? `Signature features to preserve as guinea pig design cues: ${signatureFeatures}.`
