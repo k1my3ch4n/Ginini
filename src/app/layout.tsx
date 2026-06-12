@@ -71,7 +71,7 @@ export default function RootLayout({
           본문으로 바로가기
         </a>
         <Providers>
-          <main id="main-content" className="flex flex-1 flex-col w-full md:max-w-sm md:mx-auto md:shadow-xl md:my-8 md:rounded-3xl md:overflow-hidden">
+          <main id="main-content" className="flex flex-1 flex-col w-full md:max-w-sm md:mx-auto">
             <h1 className="sr-only">Ginini — 내 닮은꼴 기니피그 만들기</h1>
             {children}
           </main>
