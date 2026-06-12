@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useImageSessionStore } from "@entities/image-session";
 import { useConvertImage } from "../api/useConvertImage";
 import { Avatar, Chip, ScreenHeader } from "@shared/ui";
@@ -15,18 +15,20 @@ export function AnimalSelectModal() {
   const inputRef = useRef<HTMLInputElement>(null);
   const { error: showError } = useToast();
 
-  const thumbnailUrl = useMemo(
-    () => (croppedImage ? URL.createObjectURL(croppedImage) : null),
-    [croppedImage],
-  );
+  const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!croppedImage) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- object URL lifecycle must be tied to this effect's cleanup
+      setThumbnailUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(croppedImage);
+    setThumbnailUrl(url);
     return () => {
-      if (thumbnailUrl) {
-        URL.revokeObjectURL(thumbnailUrl);
-      }
+      URL.revokeObjectURL(url);
     };
-  }, [thumbnailUrl]);
+  }, [croppedImage]);
 
   const handleChipClick = (chip: string) => {
     setSelected((prev) => (prev === chip ? null : chip));
