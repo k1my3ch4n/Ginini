@@ -1,6 +1,7 @@
 import { put } from "@vercel/blob";
 import { nanoid } from "nanoid";
 import type { GeneratedImage } from "./generateImage";
+import { saveResultMetadata } from "./resultMetadata";
 
 export interface PersistedResult {
   // 영구 URL(Blob 설정 시) 또는 임시 URL(미설정 폴백)
@@ -15,6 +16,7 @@ const isBlobConfigured = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 // Replicate 임시 URL은 약 1시간 후 만료되므로 공유/재접근의 전제 조건.
 export async function persistResult(
   image: GeneratedImage,
+  animalTrait: string,
 ): Promise<PersistedResult> {
   const resultId = nanoid(12);
 
@@ -34,6 +36,13 @@ export async function persistResult(
     access: "public",
     contentType: "image/jpeg",
     addRandomSuffix: false,
+  });
+
+  await saveResultMetadata(resultId, {
+    resultUrl: url,
+    animalTrait,
+    createdAt: new Date().toISOString(),
+    reportCard: null,
   });
 
   return { resultUrl: url, resultId };

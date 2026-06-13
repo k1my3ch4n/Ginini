@@ -29,7 +29,7 @@ interface KakaoShareConfig {
   }>;
 }
 
-export function shareToKakao(imageUrl: string): boolean {
+export function shareToKakao(imageUrl: string, pageUrl: string): boolean {
   if (typeof window === "undefined" || !window.Kakao) {
     return false;
   }
@@ -42,8 +42,6 @@ export function shareToKakao(imageUrl: string): boolean {
   if (!window.Kakao.isInitialized()) {
     window.Kakao.init(appKey);
   }
-
-  const pageUrl = window.location.href;
 
   window.Kakao.Share.sendDefault({
     objectType: "feed",

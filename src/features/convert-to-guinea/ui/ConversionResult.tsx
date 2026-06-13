@@ -9,7 +9,7 @@ import { ResultLightbox } from "./ResultLightbox";
 import { ResultCardView } from "./ResultCardView";
 
 export function ConversionResult() {
-  const { uploadedImage, resultImage, animalTrait, reset } =
+  const { uploadedImage, resultImage, resultId, animalTrait, reset } =
     useImageSessionStore();
   const [isLightboxOpen, setIsLightboxOpen] = useState(true);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -36,6 +36,9 @@ export function ConversionResult() {
 
   const title = animalTrait ? `${animalTrait} 기니피그` : "기니피그";
 
+  const getShareUrl = () =>
+    resultId ? `${window.location.origin}/r/${resultId}` : window.location.href;
+
   const handleDownload = async () => {
     if (!resultImage) {
       return;
@@ -52,7 +55,7 @@ export function ConversionResult() {
     if (!resultImage) {
       return;
     }
-    if (shareToKakao(resultImage)) {
+    if (shareToKakao(resultImage, getShareUrl())) {
       success("카카오톡 공유를 시작했어요!");
     } else {
       showError(
@@ -63,7 +66,7 @@ export function ConversionResult() {
 
   const handleTwitterShare = () => {
     const text = "나도 기니피그가 됐다! 🐹 Ginini에서 내 사진을 변환해봐!";
-    const url = window.location.href;
+    const url = getShareUrl();
     window.open(
       `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
       "_blank",

@@ -104,7 +104,10 @@ export async function POST(req: NextRequest) {
 
     const generated = await generateImage(prompt, seed);
 
-    const { resultUrl, resultId } = await persistResult(generated);
+    const { resultUrl, resultId } = await persistResult(
+      generated,
+      animalTrait,
+    );
 
     return NextResponse.json(
       { resultUrl, resultId },
