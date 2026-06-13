@@ -14,12 +14,13 @@ interface ImageSessionState {
   uploadedImage: string | null;
   croppedImage: Blob | null;
   resultImage: string | null;
+  resultId: string | null;
   animalTrait: string;
 
   setStep: (step: ConversionStep) => void;
   setUploadedImage: (dataURL: string) => void;
   setCroppedImage: (blob: Blob) => void;
-  setResultImage: (url: string) => void;
+  setResult: (url: string, id: string | null) => void;
   setAnimalTrait: (trait: string) => void;
   reset: () => void;
 }
@@ -29,6 +30,7 @@ const initialState = {
   uploadedImage: null,
   croppedImage: null,
   resultImage: null,
+  resultId: null,
   animalTrait: "",
 };
 
@@ -38,7 +40,7 @@ export const useImageSessionStore = create<ImageSessionState>((set) => ({
   setStep: (step) => set({ step }),
   setUploadedImage: (dataURL) => set({ uploadedImage: dataURL }),
   setCroppedImage: (blob) => set({ croppedImage: blob }),
-  setResultImage: (url) => set({ resultImage: url }),
+  setResult: (url, id) => set({ resultImage: url, resultId: id }),
   setAnimalTrait: (trait) => set({ animalTrait: trait }),
   reset: () => set(initialState),
 }));

@@ -12,7 +12,7 @@ interface ConvertPayload {
 
 export function useConvertImage() {
   const setStep = useImageSessionStore((s) => s.setStep);
-  const setResultImage = useImageSessionStore((s) => s.setResultImage);
+  const setResult = useImageSessionStore((s) => s.setResult);
   const { error: toastError } = useToast();
 
   return useMutation({
@@ -21,19 +21,20 @@ export function useConvertImage() {
       formData.append("image", blob, "image.jpg");
       formData.append("animalTrait", animalTrait);
 
-      const { data } = await apiClient.post<{ resultUrl: string }>(
-        "/convert",
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } },
-      );
+      const { data } = await apiClient.post<{
+        resultUrl: string;
+        resultId?: string;
+      }>("/convert", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-      return data.resultUrl;
+      return data;
     },
     onMutate: () => {
       setStep("converting");
     },
-    onSuccess: (resultUrl) => {
-      setResultImage(resultUrl);
+    onSuccess: ({ resultUrl, resultId }) => {
+      setResult(resultUrl, resultId ?? null);
       setStep("done");
     },
     onError: (error: Error) => {

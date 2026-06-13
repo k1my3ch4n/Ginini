@@ -45,16 +45,16 @@ export default function PrivacyPage() {
         </p>
         <ul className="mt-2 list-disc list-inside text-sm leading-relaxed text-gray-600 space-y-1">
           <li>Google Gemini — 얼굴 특징 분석</li>
-          <li>Replicate (flux-kontext-pro) — 캐릭터 이미지 생성</li>
+          <li>Replicate (flux-2-pro) — 캐릭터 이미지 생성</li>
         </ul>
       </section>
 
       <section className="mb-6">
         <h2 className="text-base font-semibold mb-2">보관 기간</h2>
         <p className="text-sm leading-relaxed text-gray-600">
-          업로드한 사진은 자체 서버에 저장되지 않으며, 변환 처리가 끝나면
-          즉시 폐기됩니다. 생성된 결과 이미지는 외부 서비스의 임시 URL로
-          제공되며 약 1시간 후 만료됩니다.
+          업로드한 원본 사진은 자체 서버에 저장되지 않으며, 변환 처리가 끝나면
+          즉시 폐기됩니다. 다만 결과 공유 기능을 위해 생성된 기니피그 캐릭터
+          이미지는 자체 스토리지에 최대 30일간 보관된 뒤 자동 삭제됩니다.
         </p>
       </section>
 

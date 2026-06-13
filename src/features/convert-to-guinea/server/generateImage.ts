@@ -24,10 +24,17 @@ function isQuotaError(error: unknown): boolean {
   return /402|insufficient/i.test(error.message);
 }
 
+export interface GeneratedImage {
+  // Replicate가 제공하는 임시 URL (약 1시간 후 만료)
+  url: string;
+  // 영속 스토리지에 올리기 위한 이미지 바이트 — 필요할 때만 받아오도록 지연 호출
+  toBlob: () => Promise<Blob>;
+}
+
 export async function generateImage(
   prompt: string,
   seed: number,
-): Promise<string> {
+): Promise<GeneratedImage> {
   const input = {
     prompt,
     aspect_ratio: "1:1",
@@ -70,5 +77,8 @@ export async function generateImage(
     );
   }
 
-  return output.url().href;
+  return {
+    url: output.url().href,
+    toBlob: () => output.blob(),
+  };
 }

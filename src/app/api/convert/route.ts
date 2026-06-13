@@ -11,6 +11,7 @@ import { analyzeFace } from "@features/convert-to-guinea/server/analyzeFace";
 import { buildPrompt } from "@features/convert-to-guinea/server/buildPrompt";
 import { ConvertError } from "@features/convert-to-guinea/server/errors";
 import { generateImage } from "@features/convert-to-guinea/server/generateImage";
+import { persistResult } from "@features/convert-to-guinea/server/persistResult";
 
 // AI 추론이 최대 120초 걸릴 수 있어서 Next.js route 타임아웃을 연장
 export const maxDuration = 120;
@@ -48,11 +49,16 @@ function getStableGenerationSeed(): number {
 
 export async function POST(req: NextRequest) {
   const ip = getClientIP(req);
-  const { allowed, remaining } = checkRateLimit(ip);
+  const { allowed, remaining, reason } = await checkRateLimit(ip);
 
   if (!allowed) {
+    const message =
+      reason === "daily"
+        ? "오늘 준비된 기니피그가 모두 소진됐어요 🐹 내일 다시 와주세요."
+        : "요청 횟수를 초과했습니다. 잠시 후 다시 시도해 주세요.";
+
     return NextResponse.json(
-      { message: "요청 횟수를 초과했습니다. 잠시 후 다시 시도해 주세요." },
+      { message },
       { status: 429, headers: { "X-RateLimit-Remaining": "0" } },
     );
   }
@@ -96,10 +102,12 @@ export async function POST(req: NextRequest) {
 
     const prompt = buildPrompt(faceFeatures, traitDescription);
 
-    const resultUrl = await generateImage(prompt, seed);
+    const generated = await generateImage(prompt, seed);
+
+    const { resultUrl, resultId } = await persistResult(generated);
 
     return NextResponse.json(
-      { resultUrl },
+      { resultUrl, resultId },
       { headers: { "X-RateLimit-Remaining": String(remaining) } },
     );
   } catch (err) {
