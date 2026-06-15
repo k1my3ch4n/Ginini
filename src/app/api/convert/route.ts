@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { ANIMAL_TRAIT_MAP } from "@shared/lib/animal-traits";
 import {
@@ -38,13 +39,18 @@ function getTraitDescription(rawTrait: string): string {
     : "";
 }
 
-function getStableGenerationSeed(): number {
-  const seed = Number.parseInt(
-    process.env.IMAGE_GENERATION_SEED ?? String(DEFAULT_GENERATION_SEED),
-    10,
-  );
+function getStableGenerationSeed(arrayBuffer: ArrayBuffer): number {
+  const overrideSeed = process.env.IMAGE_GENERATION_SEED;
 
-  return Number.isFinite(seed) && seed > 0 ? seed : DEFAULT_GENERATION_SEED;
+  if (overrideSeed) {
+    const seed = Number.parseInt(overrideSeed, 10);
+
+    return Number.isFinite(seed) && seed > 0 ? seed : DEFAULT_GENERATION_SEED;
+  }
+
+  const hash = createHash("sha256").update(Buffer.from(arrayBuffer)).digest();
+
+  return (hash.readUInt32BE(0) % 2147483647) + 1;
 }
 
 export async function POST(req: NextRequest) {
@@ -96,7 +102,7 @@ export async function POST(req: NextRequest) {
     const traitDescription = getTraitDescription(animalTrait);
 
     const arrayBuffer = await image.arrayBuffer();
-    const seed = getStableGenerationSeed();
+    const seed = getStableGenerationSeed(arrayBuffer);
 
     const faceFeatures = await analyzeFace(arrayBuffer, image.type);
 
