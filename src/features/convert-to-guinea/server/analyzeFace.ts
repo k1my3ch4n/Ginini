@@ -111,32 +111,69 @@ function hasDetectedFace(features: FaceFeatures): boolean {
   return absentCount < 4;
 }
 
+function isRetryableError(error: unknown): boolean {
+  const status = (error as { status?: number } | null)?.status;
+
+  return status === 503 || status === 429;
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+const MAX_RETRIES = 2;
+const RETRY_DELAY_MS = 1000;
+
 export async function analyzeFace(
   arrayBuffer: ArrayBuffer,
   mimeType: string,
 ): Promise<FaceFeatures> {
   const base64Data = Buffer.from(arrayBuffer).toString("base64");
 
-  const response = await genAI.models.generateContent({
-    model: ANALYSIS_MODEL,
-    contents: [
-      {
-        role: "user",
-        parts: [
-          { text: ANALYSIS_PROMPT },
-          { inlineData: { mimeType, data: base64Data } },
+  let response;
+
+  for (let attempt = 0; ; attempt++) {
+    try {
+      response = await genAI.models.generateContent({
+        model: ANALYSIS_MODEL,
+        contents: [
+          {
+            role: "user",
+            parts: [
+              { text: ANALYSIS_PROMPT },
+              { inlineData: { mimeType, data: base64Data } },
+            ],
+          },
         ],
-      },
-    ],
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: ANALYSIS_SCHEMA,
-      temperature: 0.1,
-      topP: 0.1,
-      candidateCount: 1,
-      seed: 20250407,
-    },
-  });
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: ANALYSIS_SCHEMA,
+          temperature: 0.1,
+          topP: 0.1,
+          candidateCount: 1,
+          seed: 20250407,
+        },
+      });
+      break;
+    } catch (error) {
+      if (attempt >= MAX_RETRIES || !isRetryableError(error)) {
+        if (isRetryableError(error)) {
+          throw new AnalysisFailedError(
+            "AI 분석 서비스가 혼잡합니다. 잠시 후 다시 시도해 주세요.",
+          );
+        }
+
+        throw error;
+      }
+
+      console.warn(
+        `[convert] analyzeFace retry ${attempt + 1}/${MAX_RETRIES} after error:`,
+        error instanceof Error ? error.message : error,
+      );
+
+      await sleep(RETRY_DELAY_MS * (attempt + 1));
+    }
+  }
 
   if (response.promptFeedback?.blockReason) {
     throw new FaceNotDetectedError();
