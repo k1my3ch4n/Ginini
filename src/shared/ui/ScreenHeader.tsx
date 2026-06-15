@@ -16,7 +16,7 @@ export function ScreenHeader({ title, onBack, right, className, titleId }: Scree
       <IconButton onClick={onBack} aria-label="뒤로 가기" className="-ml-2 mr-1">
         <ChevronLeftIcon />
       </IconButton>
-      <h2 id={titleId} className="text-base font-semibold text-[#4B3A2F]">{title}</h2>
+      <h2 id={titleId} className="text-base font-semibold text-ink">{title}</h2>
       {right && <div className="ml-auto">{right}</div>}
     </div>
   );

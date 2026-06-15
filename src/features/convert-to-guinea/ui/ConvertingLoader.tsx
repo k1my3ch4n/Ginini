@@ -32,17 +32,17 @@ export function ConvertingLoader() {
     <div
       role="status"
       aria-label="기니피그 변환 중"
-      className="flex flex-col items-center justify-center gap-6 min-h-dvh bg-[#FBF7F1] px-8"
+      className="flex flex-col items-center justify-center gap-6 min-h-dvh bg-page px-8"
     >
       {/* Ring spinner */}
       <div
         aria-hidden="true"
-        className="w-16 h-16 rounded-full border-4 border-gray-200 border-t-[#E6A57E] animate-spin"
+        className="w-16 h-16 rounded-full border-4 border-gray-200 border-t-brand animate-spin"
       />
 
       {/* 메시지 */}
       <div className="text-center">
-        <p className="text-lg font-semibold text-[#4B3A2F] mb-1">
+        <p className="text-lg font-semibold text-ink mb-1">
           기니피그 굽는 중...
         </p>
         <p
@@ -51,7 +51,7 @@ export function ConvertingLoader() {
           aria-valuemin={0}
           aria-valuemax={100}
           aria-label="변환 진행률"
-          className="text-3xl font-bold text-[#E6A57E] my-2"
+          className="text-3xl font-bold text-brand my-2"
         >
           {Math.round(progress)}%
         </p>

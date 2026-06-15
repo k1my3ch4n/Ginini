@@ -57,7 +57,7 @@ export default async function ResultPage({ params }: PageProps) {
     <div className="flex flex-col items-center gap-8 py-8 px-4 w-full">
       <div className="text-center">
         <div className="text-4xl mb-2">🐹</div>
-        <h1 className="text-xl font-bold text-[#4B3A2F]">{title}</h1>
+        <h1 className="text-xl font-bold text-ink">{title}</h1>
         <p className="text-sm text-gray-500 mt-1">
           누군가 Ginini로 변환한 기니피그예요
         </p>
@@ -67,12 +67,12 @@ export default async function ResultPage({ params }: PageProps) {
       <img
         src={metadata.resultUrl}
         alt={`${title} 변환 결과`}
-        className="w-full max-w-sm aspect-square object-cover rounded-2xl border-2 border-[#E6A57E] shadow-md"
+        className="w-full max-w-sm aspect-square object-cover rounded-2xl border-2 border-brand shadow-md"
       />
 
       <Link
         href="/"
-        className="w-full max-w-xs text-center rounded-2xl bg-[#E6A57E] py-4 text-sm font-semibold text-white hover:bg-[#d4956e] active:scale-95 transition-all"
+        className="w-full max-w-xs text-center rounded-2xl bg-brand py-4 text-sm font-semibold text-white hover:bg-brand-hover active:scale-95 transition-all"
       >
         나도 만들기
       </Link>

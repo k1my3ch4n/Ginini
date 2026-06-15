@@ -25,7 +25,7 @@ export function ResultCardView({
     <div className="flex flex-col items-center gap-8 py-8 px-4 w-full">
       <div className="text-center">
         <div className="text-4xl mb-2">🎉</div>
-        <h2 className="text-xl font-bold text-[#4B3A2F]">{title} 완성!</h2>
+        <h2 className="text-xl font-bold text-ink">{title} 완성!</h2>
         <p className="text-sm text-gray-500 mt-1">저장하고 공유해보세요</p>
       </div>
 
@@ -46,14 +46,14 @@ export function ResultCardView({
           )}
         </div>
         <div className="flex flex-col items-center gap-2">
-          <span className="text-xs font-semibold text-[#E6A57E] uppercase tracking-wide">
+          <span className="text-xs font-semibold text-brand uppercase tracking-wide">
             After 🐹
           </span>
           {resultImage ? (
             <button
               onClick={onOpenLightbox}
               aria-label="결과 이미지 크게 보기"
-              className="w-full aspect-square overflow-hidden rounded-2xl border-2 border-[#E6A57E] shadow-md cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E6A57E]"
+              className="w-full aspect-square overflow-hidden rounded-2xl border-2 border-brand shadow-md cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -63,7 +63,7 @@ export function ResultCardView({
               />
             </button>
           ) : (
-            <div className="w-full aspect-square rounded-2xl bg-[#fdf0e6]" />
+            <div className="w-full aspect-square rounded-2xl bg-brand-light" />
           )}
         </div>
       </div>

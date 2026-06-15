@@ -84,7 +84,7 @@ export function AnimalSelectModal() {
         e.preventDefault();
         handleSubmit();
       }}
-      className="flex flex-col w-full min-h-dvh bg-[#FBF7F1] px-5 pt-6 pb-10"
+      className="flex flex-col w-full min-h-dvh bg-page px-5 pt-6 pb-10"
     >
       <ScreenHeader
         title="기니피그 꾸미기"
@@ -95,7 +95,7 @@ export function AnimalSelectModal() {
             type="button"
             onClick={handleSkip}
             disabled={isPending}
-            className="text-sm text-gray-400 hover:text-[#4B3A2F] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+            className="text-sm text-gray-400 hover:text-ink transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
           >
             건너뛰기
           </button>
@@ -155,7 +155,7 @@ export function AnimalSelectModal() {
           onChange={handleCustomInput}
           maxLength={50}
           placeholder="직접 입력 (선택사항) — 쿼카 느낌, 날카로운 눈매..."
-          className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-[#4B3A2F] placeholder:text-gray-300 focus:outline-none focus:border-[#E6A57E] transition-colors"
+          className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-ink placeholder:text-gray-300 focus:outline-none focus:border-brand transition-colors"
         />
       </div>
 
@@ -163,7 +163,7 @@ export function AnimalSelectModal() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full py-4 rounded-2xl bg-[#E6A57E] text-white font-semibold text-base hover:bg-[#d4956e] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
+        className="w-full py-4 rounded-2xl bg-brand text-white font-semibold text-base hover:bg-brand-hover active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
       >
         {isPending ? "변환 중..." : "완성하기"}
       </button>

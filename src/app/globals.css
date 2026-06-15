@@ -12,6 +12,11 @@
   --color-kakao: #fee500;
   --color-kakao-hover: #fdd800;
   --color-kakao-ink: #191919;
+  --color-brand: #e6a57e;
+  --color-brand-hover: #d4956e;
+  --color-brand-light: #fdf0e6;
+  --color-ink: #4b3a2f;
+  --color-page: #fbf7f1;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

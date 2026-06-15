@@ -28,7 +28,7 @@ export function ResultLightbox({
         role="dialog"
         aria-modal="true"
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-xs max-h-[90vh] overflow-y-auto rounded-3xl bg-[#FBF7F1] p-4 shadow-2xl flex flex-col gap-4"
+        className="relative w-full max-w-xs max-h-[90vh] overflow-y-auto rounded-3xl bg-page p-4 shadow-2xl flex flex-col gap-4"
       >
         {/* 닫기 버튼 */}
         <div className="flex justify-end">
@@ -53,7 +53,7 @@ export function ResultLightbox({
         <div className="flex gap-3 w-full">
           <button
             onClick={onDownload}
-            className="flex-1 py-4 rounded-2xl bg-[#E6A57E] text-white text-sm font-semibold hover:bg-[#d4956e] active:scale-95 transition-all cursor-pointer"
+            className="flex-1 py-4 rounded-2xl bg-brand text-white text-sm font-semibold hover:bg-brand-hover active:scale-95 transition-all cursor-pointer"
           >
             저장
           </button>

@@ -117,7 +117,7 @@ export function ImageCropModal() {
           <button
             ref={confirmRef}
             onClick={handleConfirm}
-            className="flex-2 flex-[2] py-4 rounded-2xl bg-[#E6A57E] text-white text-sm font-semibold hover:bg-[#d4956e] active:scale-95 transition-all cursor-pointer"
+            className="flex-2 flex-[2] py-4 rounded-2xl bg-brand text-white text-sm font-semibold hover:bg-brand-hover active:scale-95 transition-all cursor-pointer"
           >
             확인
           </button>

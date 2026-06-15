@@ -11,7 +11,7 @@ export function Avatar({ src, alt, size = 80, className }: AvatarProps) {
   return (
     <div
       className={mergeClasses(
-        "rounded-full overflow-hidden border-2 border-[#E6A57E] shadow-md",
+        "rounded-full overflow-hidden border-2 border-brand shadow-md",
         className,
       )}
       style={{ width: size, height: size }}

@@ -22,8 +22,8 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
           "inline-flex items-center justify-center",
           "min-w-[44px] min-h-[44px]",
           "rounded-full transition-colors cursor-pointer select-none",
-          "text-gray-400 hover:text-[#4B3A2F] hover:bg-gray-100 active:bg-gray-200",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E6A57E] focus-visible:ring-offset-1",
+          "text-gray-400 hover:text-ink hover:bg-gray-100 active:bg-gray-200",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1",
           "disabled:pointer-events-none disabled:opacity-50",
           className,
         )}

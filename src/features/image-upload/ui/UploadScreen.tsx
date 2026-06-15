@@ -36,7 +36,7 @@ export function UploadScreen() {
   };
 
   return (
-    <div className="flex flex-col w-full min-h-dvh bg-[#FBF7F1] px-5 pt-6 pb-10">
+    <div className="flex flex-col w-full min-h-dvh bg-page px-5 pt-6 pb-10">
       <ScreenHeader title="사진 올리기" onBack={() => setStep("idle")} className="mb-8" />
 
       {/* hidden inputs */}
