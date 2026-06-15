@@ -76,7 +76,7 @@ export function ResultCardView({
           variant="ghost"
           size="md"
           onClick={onKakaoShare}
-          className="w-full gap-2 bg-yellow-400 text-gray-900 hover:bg-yellow-500 rounded-xl"
+          className="w-full gap-2 bg-kakao text-kakao-ink hover:bg-kakao-hover rounded-xl"
         >
           💬 카카오톡 공유
         </Button>

@@ -40,6 +40,46 @@ export function CameraIcon({ className }: IconProps) {
   );
 }
 
+export function GuineaPigMascotIcon({ className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 100 100"
+      aria-hidden="true"
+    >
+      <defs>
+        <clipPath id="gp-head-clip">
+          <rect x="10" y="24" width="80" height="62" rx="30" />
+        </clipPath>
+      </defs>
+
+      {/* 귀 */}
+      <circle cx="26" cy="24" r="13" fill="#F4C9A8" stroke="#4B3A2F" strokeWidth="3" />
+      <circle cx="74" cy="24" r="13" fill="#F4C9A8" stroke="#4B3A2F" strokeWidth="3" />
+
+      {/* 얼굴 */}
+      <rect x="10" y="24" width="80" height="62" rx="30" fill="#FFFDF9" />
+      <rect x="50" y="24" width="40" height="62" fill="#E6A57E" clipPath="url(#gp-head-clip)" />
+      <rect x="10" y="24" width="80" height="62" rx="30" fill="none" stroke="#4B3A2F" strokeWidth="3.5" />
+
+      {/* 눈 */}
+      <circle cx="37" cy="56" r="4.5" fill="#4B3A2F" />
+      <circle cx="63" cy="56" r="4.5" fill="#4B3A2F" />
+
+      {/* 코 */}
+      <ellipse cx="50" cy="67" rx="5" ry="3.5" fill="#4B3A2F" />
+
+      {/* 수염 */}
+      <g stroke="#4B3A2F" strokeWidth="1.5" strokeLinecap="round">
+        <line x1="14" y1="64" x2="32" y2="62" />
+        <line x1="14" y1="72" x2="32" y2="71" />
+        <line x1="86" y1="64" x2="68" y2="62" />
+        <line x1="86" y1="72" x2="68" y2="71" />
+      </g>
+    </svg>
+  );
+}
+
 export function AlbumIcon({ className }: IconProps) {
   return (
     <svg

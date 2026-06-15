@@ -11,7 +11,7 @@ import { ResultCardView } from "./ResultCardView";
 export function ConversionResult() {
   const { uploadedImage, resultImage, resultId, animalTrait, reset } =
     useImageSessionStore();
-  const [isLightboxOpen, setIsLightboxOpen] = useState(true);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const { success, error: showError } = useToast();
 
@@ -75,30 +75,28 @@ export function ConversionResult() {
     success("트위터 공유 창을 열었어요!");
   };
 
-  if (isLightboxOpen && resultImage) {
-    return (
-      <ResultLightbox
+  return (
+    <>
+      <ResultCardView
+        uploadedImage={uploadedImage}
         resultImage={resultImage}
         title={title}
-        closeButtonRef={closeButtonRef}
-        onClose={() => setIsLightboxOpen(false)}
+        onOpenLightbox={() => setIsLightboxOpen(true)}
         onDownload={handleDownload}
         onKakaoShare={handleKakaoShare}
+        onTwitterShare={handleTwitterShare}
         onReset={reset}
       />
-    );
-  }
-
-  return (
-    <ResultCardView
-      uploadedImage={uploadedImage}
-      resultImage={resultImage}
-      title={title}
-      onOpenLightbox={() => setIsLightboxOpen(true)}
-      onDownload={handleDownload}
-      onKakaoShare={handleKakaoShare}
-      onTwitterShare={handleTwitterShare}
-      onReset={reset}
-    />
+      {isLightboxOpen && resultImage && (
+        <ResultLightbox
+          resultImage={resultImage}
+          title={title}
+          closeButtonRef={closeButtonRef}
+          onClose={() => setIsLightboxOpen(false)}
+          onDownload={handleDownload}
+          onKakaoShare={handleKakaoShare}
+        />
+      )}
+    </>
   );
 }

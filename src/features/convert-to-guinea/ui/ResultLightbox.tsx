@@ -1,5 +1,5 @@
 import { Ref } from "react";
-import { FullscreenSheet, IconButton } from "@shared/ui";
+import { IconButton } from "@shared/ui";
 
 interface ResultLightboxProps {
   resultImage: string;
@@ -8,7 +8,6 @@ interface ResultLightboxProps {
   onClose: () => void;
   onDownload: () => void;
   onKakaoShare: () => void;
-  onReset: () => void;
 }
 
 export function ResultLightbox({
@@ -18,55 +17,54 @@ export function ResultLightbox({
   onClose,
   onDownload,
   onKakaoShare,
-  onReset,
 }: ResultLightboxProps) {
   return (
-    <FullscreenSheet titleId="lightbox-title">
-      {/* 닫기 버튼 */}
-      <div className="flex justify-end px-3 pt-10">
-        <IconButton ref={closeButtonRef} onClick={onClose} aria-label="라이트박스 닫기">
-          <span aria-hidden="true" className="text-xl font-bold leading-none">
-            ✕
-          </span>
-        </IconButton>
-      </div>
+    <div
+      role="presentation"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-6 py-4"
+      onClick={onClose}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-xs max-h-[90vh] overflow-y-auto rounded-3xl bg-[#FBF7F1] p-4 shadow-2xl flex flex-col gap-4"
+      >
+        {/* 닫기 버튼 */}
+        <div className="flex justify-end">
+          <IconButton ref={closeButtonRef} onClick={onClose} aria-label="라이트박스 닫기">
+            <span aria-hidden="true" className="text-xl font-bold leading-none">
+              ✕
+            </span>
+          </IconButton>
+        </div>
 
-      {/* 이미지 */}
-      <div className="flex-1 flex items-center justify-center px-6 py-4">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={resultImage}
-          alt={`${title} 변환 결과`}
-          className="max-w-full max-h-full rounded-2xl shadow-2xl object-contain"
-        />
-      </div>
+        {/* 이미지 */}
+        <div className="flex items-center justify-center px-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={resultImage}
+            alt={`${title} 변환 결과`}
+            className="max-w-full max-h-[60vh] rounded-2xl shadow-md object-contain"
+          />
+        </div>
 
-      {/* 타이틀 + 액션 */}
-      <div className="px-5 pb-10 flex flex-col items-center gap-4">
-        <p id="lightbox-title" className="text-[#4B3A2F] font-bold text-lg">
-          {title}
-        </p>
-        <div className="flex gap-3 w-full max-w-xs">
+        {/* 액션 */}
+        <div className="flex gap-3 w-full">
           <button
             onClick={onDownload}
-            className="flex-1 py-4 rounded-2xl border border-gray-200 text-[#4B3A2F] text-sm font-medium hover:bg-gray-100 active:scale-95 transition-all cursor-pointer"
+            className="flex-1 py-4 rounded-2xl bg-[#E6A57E] text-white text-sm font-semibold hover:bg-[#d4956e] active:scale-95 transition-all cursor-pointer"
           >
             저장
           </button>
           <button
             onClick={onKakaoShare}
-            className="flex-[2] py-4 rounded-2xl bg-[#E6A57E] text-white text-sm font-semibold hover:bg-[#d4956e] active:scale-95 transition-all cursor-pointer"
+            className="flex-1 py-4 rounded-2xl bg-kakao text-kakao-ink text-sm font-semibold hover:bg-kakao-hover active:scale-95 transition-all cursor-pointer"
           >
-            공유
-          </button>
-          <button
-            onClick={onReset}
-            className="flex-1 py-4 rounded-2xl border border-gray-200 text-[#4B3A2F] text-sm font-medium hover:bg-gray-100 active:scale-95 transition-all cursor-pointer"
-          >
-            다시
+            카카오톡 공유
           </button>
         </div>
       </div>
-    </FullscreenSheet>
+    </div>
   );
 }

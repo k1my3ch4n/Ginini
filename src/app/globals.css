@@ -9,6 +9,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-kakao: #fee500;
+  --color-kakao-hover: #fdd800;
+  --color-kakao-ink: #191919;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
