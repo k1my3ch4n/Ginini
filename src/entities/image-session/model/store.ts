@@ -9,6 +9,8 @@ export type ConversionStep =
   | "done"
   | "error";
 
+export type Gender = "masculine" | "feminine";
+
 interface ImageSessionState {
   step: ConversionStep;
   uploadedImage: string | null;

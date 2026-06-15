@@ -16,4 +16,5 @@ export const ANIMAL_TRAIT_MAP: Record<string, string> = {
     "calm rounded eyes with soft dark eye accents, gentle expression, full rounded cheeks with a soft wide jaw",
 };
 
-export const ANIMAL_TRAIT_KEYS = Object.keys(ANIMAL_TRAIT_MAP);
+// 동물상 선택은 보조 옵션으로, 화면에는 핵심 4종만 노출
+export const ANIMAL_TRAIT_CHIP_KEYS = ["고양이상", "강아지상", "토끼상", "사슴상"];

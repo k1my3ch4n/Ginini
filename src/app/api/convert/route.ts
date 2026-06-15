@@ -19,6 +19,8 @@ export const maxDuration = 120;
 
 const DEFAULT_GENERATION_SEED = 20250407;
 
+const USER_GENDER_VALUES = new Set(["masculine", "feminine"]);
+
 function getTraitDescription(rawTrait: string): string {
   const trait = rawTrait.trim();
 
@@ -73,6 +75,7 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const image = formData.get("image") as File | null;
     const animalTrait = (formData.get("animalTrait") as string | null) ?? "";
+    const gender = (formData.get("gender") as string | null) ?? "";
 
     if (!image) {
       return NextResponse.json(
@@ -105,6 +108,10 @@ export async function POST(req: NextRequest) {
     const seed = getStableGenerationSeed(arrayBuffer);
 
     const faceFeatures = await analyzeFace(arrayBuffer, image.type);
+
+    if (USER_GENDER_VALUES.has(gender)) {
+      faceFeatures.genderPresentation = gender;
+    }
 
     const prompt = buildPrompt(faceFeatures, traitDescription);
 

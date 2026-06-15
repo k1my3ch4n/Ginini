@@ -1,15 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useImageSessionStore } from "@entities/image-session";
+import { useImageSessionStore, type Gender } from "@entities/image-session";
 import { useConvertImage } from "../api/useConvertImage";
 import { Avatar, Chip, ScreenHeader } from "@shared/ui";
-import { ANIMAL_TRAIT_KEYS, sanitizeCustomTrait } from "@shared/lib";
+import { ANIMAL_TRAIT_CHIP_KEYS, sanitizeCustomTrait } from "@shared/lib";
 import { useToast } from "@shared/model";
+
+const GENDER_OPTIONS: { label: string; value: Gender }[] = [
+  { label: "남자", value: "masculine" },
+  { label: "여자", value: "feminine" },
+];
 
 export function AnimalSelectModal() {
   const { croppedImage, setAnimalTrait, setStep } = useImageSessionStore();
   const { mutate: convert, isPending } = useConvertImage();
+  const [gender, setLocalGender] = useState<Gender | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [customInput, setCustomInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -44,8 +50,12 @@ export function AnimalSelectModal() {
     if (!croppedImage || isPending) {
       return;
     }
+    if (!gender) {
+      showError("성별을 선택해주세요.");
+      return;
+    }
     setAnimalTrait(trait);
-    convert({ blob: croppedImage, animalTrait: trait });
+    convert({ blob: croppedImage, animalTrait: trait, gender });
   };
 
   const handleSubmit = () => {
@@ -77,7 +87,7 @@ export function AnimalSelectModal() {
       className="flex flex-col w-full min-h-dvh bg-[#FBF7F1] px-5 pt-6 pb-10"
     >
       <ScreenHeader
-        title="닮은꼴 고르기"
+        title="기니피그 꾸미기"
         onBack={() => setStep("cropping")}
         className="mb-6"
         right={
@@ -99,13 +109,29 @@ export function AnimalSelectModal() {
         </div>
       )}
 
+      {/* 성별 선택 */}
+      <p className="text-sm text-center text-gray-500 mb-3">
+        성별을 선택해주세요
+      </p>
+      <div className="flex gap-2 justify-center mb-6">
+        {GENDER_OPTIONS.map((option) => (
+          <Chip
+            key={option.value}
+            selected={gender === option.value}
+            onClick={() => setLocalGender(option.value)}
+          >
+            {option.label}
+          </Chip>
+        ))}
+      </div>
+
       <p className="text-sm text-center text-gray-500 mb-5">
-        닮은꼴 하나만 골라요
+        닮은꼴 동물상이 있다면 골라봐요 (선택)
       </p>
 
       {/* 동물상 칩 */}
       <div className="flex flex-wrap gap-2 justify-center mb-6">
-        {ANIMAL_TRAIT_KEYS.map((chip) => (
+        {ANIMAL_TRAIT_CHIP_KEYS.map((chip) => (
           <Chip
             key={chip}
             selected={selected === chip}

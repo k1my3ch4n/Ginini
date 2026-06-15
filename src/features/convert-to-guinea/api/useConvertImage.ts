@@ -2,12 +2,13 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@shared/api";
-import { useImageSessionStore } from "@entities/image-session";
+import { useImageSessionStore, type Gender } from "@entities/image-session";
 import { useToast } from "@shared/model";
 
 interface ConvertPayload {
   blob: Blob;
   animalTrait: string;
+  gender: Gender;
 }
 
 export function useConvertImage() {
@@ -16,10 +17,11 @@ export function useConvertImage() {
   const { error: toastError } = useToast();
 
   return useMutation({
-    mutationFn: async ({ blob, animalTrait }: ConvertPayload) => {
+    mutationFn: async ({ blob, animalTrait, gender }: ConvertPayload) => {
       const formData = new FormData();
       formData.append("image", blob, "image.jpg");
       formData.append("animalTrait", animalTrait);
+      formData.append("gender", gender);
 
       const { data } = await apiClient.post<{
         resultUrl: string;
