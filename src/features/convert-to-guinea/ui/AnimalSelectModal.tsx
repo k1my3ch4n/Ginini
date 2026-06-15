@@ -74,10 +74,6 @@ export function AnimalSelectModal() {
     handleConvert(selected || "");
   };
 
-  const handleSkip = () => {
-    handleConvert("");
-  };
-
   return (
     <form
       onSubmit={(e) => {
@@ -90,16 +86,6 @@ export function AnimalSelectModal() {
         title="기니피그 꾸미기"
         onBack={() => setStep("cropping")}
         className="mb-6"
-        right={
-          <button
-            type="button"
-            onClick={handleSkip}
-            disabled={isPending}
-            className="text-sm text-gray-400 hover:text-ink transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-          >
-            건너뛰기
-          </button>
-        }
       />
 
       {/* 내 사진 썸네일 */}
@@ -111,7 +97,7 @@ export function AnimalSelectModal() {
 
       {/* 성별 선택 */}
       <p className="text-sm text-center text-gray-500 mb-3">
-        성별을 선택해주세요
+        성별을 선택해주세요 (필수)
       </p>
       <div className="flex gap-2 justify-center mb-6">
         {GENDER_OPTIONS.map((option) => (
@@ -162,7 +148,7 @@ export function AnimalSelectModal() {
       {/* 완성하기 버튼 */}
       <button
         type="submit"
-        disabled={isPending}
+        disabled={isPending || !gender}
         className="w-full py-4 rounded-2xl bg-brand text-white font-semibold text-base hover:bg-brand-hover active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
       >
         {isPending ? "변환 중..." : "완성하기"}

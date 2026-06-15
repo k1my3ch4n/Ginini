@@ -7,7 +7,6 @@ interface ResultCardViewProps {
   onOpenLightbox: () => void;
   onDownload: () => void;
   onKakaoShare: () => void;
-  onTwitterShare: () => void;
   onReset: () => void;
 }
 
@@ -18,7 +17,6 @@ export function ResultCardView({
   onOpenLightbox,
   onDownload,
   onKakaoShare,
-  onTwitterShare,
   onReset,
 }: ResultCardViewProps) {
   return (
@@ -79,14 +77,6 @@ export function ResultCardView({
           className="w-full gap-2 bg-kakao text-kakao-ink hover:bg-kakao-hover rounded-xl"
         >
           💬 카카오톡 공유
-        </Button>
-        <Button
-          variant="ghost"
-          size="md"
-          onClick={onTwitterShare}
-          className="w-full gap-2 bg-black text-white hover:bg-gray-800 rounded-xl"
-        >
-          𝕏 트위터 공유
         </Button>
         <Button variant="ghost" size="md" onClick={onReset} className="w-full text-gray-500">
           다시 변환하기

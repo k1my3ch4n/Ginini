@@ -11,7 +11,7 @@ import { ResultCardView } from "./ResultCardView";
 export function ConversionResult() {
   const { uploadedImage, resultImage, resultId, animalTrait, reset } =
     useImageSessionStore();
-  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(true);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const { success, error: showError } = useToast();
 
@@ -64,17 +64,6 @@ export function ConversionResult() {
     }
   };
 
-  const handleTwitterShare = () => {
-    const text = "나도 기니피그가 됐다! 🐹 Ginini에서 내 사진을 변환해봐!";
-    const url = getShareUrl();
-    window.open(
-      `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
-      "_blank",
-      "noopener,noreferrer",
-    );
-    success("트위터 공유 창을 열었어요!");
-  };
-
   return (
     <>
       <ResultCardView
@@ -84,7 +73,6 @@ export function ConversionResult() {
         onOpenLightbox={() => setIsLightboxOpen(true)}
         onDownload={handleDownload}
         onKakaoShare={handleKakaoShare}
-        onTwitterShare={handleTwitterShare}
         onReset={reset}
       />
       {isLightboxOpen && resultImage && (
