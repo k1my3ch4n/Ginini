@@ -1,4 +1,4 @@
-import { Button } from "@shared/ui";
+import { Button, ScreenLayout } from "@shared/ui";
 
 interface ResultCardViewProps {
   uploadedImage: string | null;
@@ -20,7 +20,28 @@ export function ResultCardView({
   onReset,
 }: ResultCardViewProps) {
   return (
-    <div className="flex flex-col items-center gap-8 py-8 px-4 w-full">
+    <ScreenLayout
+      contentClassName="flex flex-col items-center gap-8 pt-8 px-4"
+      footerClassName="items-center"
+      footer={
+        <div className="flex flex-col gap-3 w-full max-w-xs">
+          <Button onClick={onDownload} size="md" className="w-full gap-2">
+            ⬇️ 이미지 저장
+          </Button>
+          <Button
+            variant="ghost"
+            size="md"
+            onClick={onKakaoShare}
+            className="w-full gap-2 bg-kakao text-kakao-ink hover:bg-kakao-hover rounded-xl"
+          >
+            💬 카카오톡 공유
+          </Button>
+          <Button variant="ghost" size="md" onClick={onReset} className="w-full text-gray-500">
+            다시 변환하기
+          </Button>
+        </div>
+      }
+    >
       <div className="text-center">
         <div className="text-4xl mb-2">🎉</div>
         <h2 className="text-xl font-bold text-ink">{title} 완성!</h2>
@@ -65,23 +86,6 @@ export function ResultCardView({
           )}
         </div>
       </div>
-
-      <div className="flex flex-col gap-3 w-full max-w-xs">
-        <Button onClick={onDownload} size="md" className="w-full gap-2">
-          ⬇️ 이미지 저장
-        </Button>
-        <Button
-          variant="ghost"
-          size="md"
-          onClick={onKakaoShare}
-          className="w-full gap-2 bg-kakao text-kakao-ink hover:bg-kakao-hover rounded-xl"
-        >
-          💬 카카오톡 공유
-        </Button>
-        <Button variant="ghost" size="md" onClick={onReset} className="w-full text-gray-500">
-          다시 변환하기
-        </Button>
-      </div>
-    </div>
+    </ScreenLayout>
   );
 }

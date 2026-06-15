@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useImageSessionStore, type Gender } from "@entities/image-session";
 import { useConvertImage } from "../api/useConvertImage";
-import { Avatar, Chip, ScreenHeader } from "@shared/ui";
+import { Avatar, Chip, ScreenHeader, ScreenLayout } from "@shared/ui";
 import { ANIMAL_TRAIT_CHIP_KEYS, sanitizeCustomTrait } from "@shared/lib";
 import { useToast } from "@shared/model";
 
@@ -75,19 +75,29 @@ export function AnimalSelectModal() {
   };
 
   return (
-    <form
+    <ScreenLayout
+      as="form"
       onSubmit={(e) => {
         e.preventDefault();
         handleSubmit();
       }}
-      className="flex flex-col w-full min-h-dvh bg-page px-5 pt-6 pb-10"
+      header={
+        <ScreenHeader
+          title="기니피그 꾸미기"
+          onBack={() => setStep("cropping")}
+          className="mb-6"
+        />
+      }
+      footer={
+        <button
+          type="submit"
+          disabled={isPending || !gender}
+          className="w-full py-4 rounded-2xl bg-brand text-white font-semibold text-base hover:bg-brand-hover active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
+        >
+          {isPending ? "변환 중..." : "완성하기"}
+        </button>
+      }
     >
-      <ScreenHeader
-        title="기니피그 꾸미기"
-        onBack={() => setStep("cropping")}
-        className="mb-6"
-      />
-
       {/* 내 사진 썸네일 */}
       {thumbnailUrl && (
         <div className="flex justify-center mb-5">
@@ -144,15 +154,6 @@ export function AnimalSelectModal() {
           className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-ink placeholder:text-gray-300 focus:outline-none focus:border-brand transition-colors"
         />
       </div>
-
-      {/* 완성하기 버튼 */}
-      <button
-        type="submit"
-        disabled={isPending || !gender}
-        className="w-full py-4 rounded-2xl bg-brand text-white font-semibold text-base hover:bg-brand-hover active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
-      >
-        {isPending ? "변환 중..." : "완성하기"}
-      </button>
-    </form>
+    </ScreenLayout>
   );
 }

@@ -6,7 +6,7 @@ import "react-image-crop/dist/ReactCrop.css";
 import { useImageSessionStore } from "@entities/image-session";
 import { getCroppedBlob } from "@shared/lib";
 import { useToast } from "@shared/model";
-import { FullscreenSheet, ScreenHeader } from "@shared/ui";
+import { FullscreenSheet, ScreenHeader, ScreenLayout } from "@shared/ui";
 
 export function ImageCropModal() {
   const { uploadedImage, setCroppedImage, setStep } = useImageSessionStore();
@@ -70,17 +70,39 @@ export function ImageCropModal() {
 
   return (
     <FullscreenSheet titleId="crop-dialog-title">
-      {/* 상단 타이틀 */}
-      <div className="px-5 pt-6 pb-4">
-        <ScreenHeader
-          title="동그랗게 맞추기"
-          onBack={() => setStep("upload")}
-          titleId="crop-dialog-title"
-        />
-      </div>
-
-      {/* 크롭 영역 — 화면을 가득 채우고 원형 컷아웃 효과 */}
-      <div className="flex-1 flex items-center justify-center overflow-hidden crop-fullscreen">
+      <ScreenLayout
+        variant="sheet"
+        header={
+          <ScreenHeader
+            title="동그랗게 맞추기"
+            onBack={() => setStep("upload")}
+            titleId="crop-dialog-title"
+          />
+        }
+        contentClassName="flex items-center justify-center overflow-hidden crop-fullscreen px-0"
+        footer={
+          <>
+            <p className="text-center text-gray-400 text-xs">
+              드래그해서 얼굴을 맞춰요
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setStep("upload")}
+                className="flex-1 py-4 rounded-2xl border border-gray-200 text-gray-500 text-sm font-medium hover:bg-gray-100 active:scale-95 transition-all cursor-pointer"
+              >
+                다시 선택
+              </button>
+              <button
+                ref={confirmRef}
+                onClick={handleConfirm}
+                className="flex-2 flex-[2] py-4 rounded-2xl bg-brand text-white text-sm font-semibold hover:bg-brand-hover active:scale-95 transition-all cursor-pointer"
+              >
+                확인
+              </button>
+            </div>
+          </>
+        }
+      >
         <ReactCrop
           crop={crop}
           onChange={(c) => setCrop(c)}
@@ -100,29 +122,7 @@ export function ImageCropModal() {
             onLoad={onImageLoad}
           />
         </ReactCrop>
-      </div>
-
-      {/* 하단 고정 바 */}
-      <div className="px-5 pb-10 pt-4 flex flex-col gap-3">
-        <p className="text-center text-gray-400 text-xs">
-          드래그해서 얼굴을 맞춰요
-        </p>
-        <div className="flex gap-3">
-          <button
-            onClick={() => setStep("upload")}
-            className="flex-1 py-4 rounded-2xl border border-gray-200 text-gray-500 text-sm font-medium hover:bg-gray-100 active:scale-95 transition-all cursor-pointer"
-          >
-            다시 선택
-          </button>
-          <button
-            ref={confirmRef}
-            onClick={handleConfirm}
-            className="flex-2 flex-[2] py-4 rounded-2xl bg-brand text-white text-sm font-semibold hover:bg-brand-hover active:scale-95 transition-all cursor-pointer"
-          >
-            확인
-          </button>
-        </div>
-      </div>
+      </ScreenLayout>
     </FullscreenSheet>
   );
 }

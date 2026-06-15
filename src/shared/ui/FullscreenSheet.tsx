@@ -17,7 +17,7 @@ export function FullscreenSheet({ titleId, className, children }: FullscreenShee
       aria-modal="true"
       aria-labelledby={titleId}
       className={mergeClasses(
-        "fixed inset-0 z-50 flex flex-col bg-page md:left-1/2 md:right-auto md:-translate-x-1/2 md:max-w-sm md:w-full md:top-8 md:bottom-8 md:rounded-3xl md:overflow-hidden",
+        "fixed inset-0 z-50 flex flex-col bg-page md:left-1/2 md:right-auto md:-translate-x-1/2 md:max-w-sm md:w-full",
         className,
       )}
     >
