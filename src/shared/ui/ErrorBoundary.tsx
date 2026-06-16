@@ -1,6 +1,7 @@
 "use client";
 
 import { Component, ReactNode } from "react";
+import { GuineaPigMascotIcon } from "./icons";
 
 interface Props {
   children: ReactNode;
@@ -38,7 +39,7 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div role="alert" className="min-h-screen flex items-center justify-center bg-page px-4">
           <div className="text-center max-w-sm">
-            <div className="text-5xl mb-4">🐹</div>
+            <GuineaPigMascotIcon className="w-28 h-28 mb-4 block mx-auto" />
             <h2 className="text-xl font-bold text-gray-900 mb-2">
               앗, 문제가 발생했어요
             </h2>

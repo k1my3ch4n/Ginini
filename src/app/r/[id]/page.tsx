@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getResultMetadata } from "@features/convert-to-guinea/server/resultMetadata";
+import { GuineaPigMascotIcon } from "@/shared/ui";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -56,7 +57,7 @@ export default async function ResultPage({ params }: PageProps) {
   return (
     <div className="flex flex-col items-center gap-8 py-8 px-4 w-full">
       <div className="text-center">
-        <div className="text-4xl mb-2">🐹</div>
+        <GuineaPigMascotIcon className="w-28 h-28 mb-2 block mx-auto" />
         <h1 className="text-xl font-bold text-ink">{title}</h1>
         <p className="text-sm text-gray-500 mt-1">
           누군가 Ginini로 변환한 기니피그예요
