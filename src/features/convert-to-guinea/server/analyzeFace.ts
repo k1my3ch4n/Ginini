@@ -4,7 +4,13 @@ import { AnalysisFailedError, FaceNotDetectedError } from "./errors";
 
 const ANALYSIS_MODEL = "gemini-2.5-flash-lite" as const;
 
-const genAI = new GoogleGenAI({ apiKey: getRequiredEnv("GEMINI_API_KEY") });
+let _genAI: GoogleGenAI | null = null;
+function getGenAI(): GoogleGenAI {
+  if (!_genAI) {
+    _genAI = new GoogleGenAI({ apiKey: getRequiredEnv("GEMINI_API_KEY") });
+  }
+  return _genAI;
+}
 
 const ANALYSIS_PROMPT =
   "Analyze only the visible facial appearance in this cropped photo. " +
@@ -134,7 +140,7 @@ export async function analyzeFace(
 
   for (let attempt = 0; ; attempt++) {
     try {
-      response = await genAI.models.generateContent({
+      response = await getGenAI().models.generateContent({
         model: ANALYSIS_MODEL,
         contents: [
           {

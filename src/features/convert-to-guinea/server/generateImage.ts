@@ -4,9 +4,13 @@ import { GenerationFailedError, GenerationQuotaError } from "./errors";
 
 const MODEL = "black-forest-labs/flux-2-pro" as const;
 
-const replicate = new Replicate({
-  auth: getRequiredEnv("REPLICATE_API_TOKEN"),
-});
+let _replicate: Replicate | null = null;
+function getReplicate(): Replicate {
+  if (!_replicate) {
+    _replicate = new Replicate({ auth: getRequiredEnv("REPLICATE_API_TOKEN") });
+  }
+  return _replicate;
+}
 
 function isUnsupportedSeedError(error: unknown): boolean {
   if (!(error instanceof Error)) {
@@ -47,7 +51,7 @@ export async function generateImage(
 
   try {
     try {
-      output = (await replicate.run(MODEL, { input })) as FileOutput;
+      output = (await getReplicate().run(MODEL, { input })) as FileOutput;
     } catch (error) {
       if (!isUnsupportedSeedError(error)) {
         throw error;
@@ -58,7 +62,7 @@ export async function generateImage(
         error instanceof Error ? error.message : error,
       );
 
-      output = (await replicate.run(MODEL, {
+      output = (await getReplicate().run(MODEL, {
         input: {
           prompt: input.prompt,
           aspect_ratio: input.aspect_ratio,
