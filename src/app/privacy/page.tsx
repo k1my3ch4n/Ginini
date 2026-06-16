@@ -15,7 +15,9 @@ export default function PrivacyPage() {
         ← 홈으로
       </Link>
 
-      <h1 className="text-lg font-semibold mb-1">이용약관 및 개인정보처리방침</h1>
+      <h1 className="text-lg font-semibold mb-1">
+        이용약관 및 개인정보처리방침
+      </h1>
       <p className="text-xs text-gray-400 mb-8">최종 업데이트: 2026-06-11</p>
 
       <section className="mb-6">
@@ -61,7 +63,10 @@ export default function PrivacyPage() {
       <section className="mb-6">
         <h2 className="text-base font-semibold mb-2">이용약관</h2>
         <ul className="list-disc list-inside text-sm leading-relaxed text-gray-600 space-y-1">
-          <li>본 서비스는 재미를 위한 엔터테인먼트 목적으로 제공되며, 생성 결과의 정확성을 보장하지 않습니다.</li>
+          <li>
+            본 서비스는 재미를 위한 엔터테인먼트 목적으로 제공되며, 생성 결과의
+            정확성을 보장하지 않습니다.
+          </li>
           <li>본인 동의 없이 타인의 사진을 업로드하지 않아야 합니다.</li>
         </ul>
       </section>
@@ -69,8 +74,16 @@ export default function PrivacyPage() {
       <section>
         <h2 className="text-base font-semibold mb-2">문의</h2>
         <p className="text-sm leading-relaxed text-gray-600">
-          서비스 이용 중 궁금한 점이 있다면 앱 내 공유 기능을 통해 문의해
-          주세요.
+          서비스 이용 중 궁금한 점이나 문제가 있다면{" "}
+          <a
+            href="https://github.com/k1my3ch4n/Ginini/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-gray-800 transition-colors"
+          >
+            GitHub Issues
+          </a>
+          를 통해 문의해 주세요.
         </p>
       </section>
     </div>

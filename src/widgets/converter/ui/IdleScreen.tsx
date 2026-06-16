@@ -20,13 +20,33 @@ export function IdleScreen({ onStart }: IdleScreenProps) {
             좋아, 시작!
           </button>
 
-          {/* 약관/개인정보처리방침 링크 */}
-          <Link
-            href="/privacy"
-            className="mt-2 text-xs text-gray-300 hover:text-gray-500 transition-colors"
-          >
-            이용약관 및 개인정보처리방침
-          </Link>
+          {/* 링크 */}
+          <div className="flex items-center justify-center gap-4 text-xs text-gray-300">
+            <a
+              href="https://github.com/k1my3ch4n/Ginini"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-500 transition-colors"
+            >
+              GitHub
+            </a>
+            <span aria-hidden="true">·</span>
+            <a
+              href="https://github.com/k1my3ch4n/Ginini/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-500 transition-colors"
+            >
+              문의하기
+            </a>
+            <span aria-hidden="true">·</span>
+            <Link
+              href="/privacy"
+              className="hover:text-gray-500 transition-colors"
+            >
+              개인정보처리방침
+            </Link>
+          </div>
         </>
       }
     >

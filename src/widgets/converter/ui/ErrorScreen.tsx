@@ -9,7 +9,19 @@ export function ErrorScreen({ onRetry }: ErrorScreenProps) {
     <ScreenLayout
       contentClassName="flex flex-col items-center justify-center gap-4 px-4"
       footerClassName="items-center"
-      footer={<Button onClick={onRetry}>다시 시도하기</Button>}
+      footer={
+        <>
+          <Button onClick={onRetry}>다시 시도하기</Button>
+          <a
+            href="https://github.com/k1my3ch4n/Ginini/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            문제가 반복되나요? GitHub에 제보하기
+          </a>
+        </>
+      }
     >
       <div role="alert" className="flex flex-col items-center gap-4">
         <div className="text-5xl">😢</div>
