@@ -1,4 +1,5 @@
 export { mergeClasses } from "./utils";
+export { useNavigationGuard } from "./useNavigationGuard";
 export {
   validateImageFile,
   fileToDataURL,

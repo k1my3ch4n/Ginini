@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { apiClient } from "@shared/api";
+import { apiClient, ApiError } from "@shared/api";
 import { useImageSessionStore, type Gender } from "@entities/image-session";
 import { useToast } from "@shared/model";
 
@@ -14,6 +14,7 @@ interface ConvertPayload {
 export function useConvertImage() {
   const setStep = useImageSessionStore((s) => s.setStep);
   const setResult = useImageSessionStore((s) => s.setResult);
+  const setFaceError = useImageSessionStore((s) => s.setFaceError);
   const { error: toastError } = useToast();
 
   return useMutation({
@@ -40,6 +41,9 @@ export function useConvertImage() {
       setStep("done");
     },
     onError: (error: Error) => {
+      if (error instanceof ApiError && error.status === 422) {
+        setFaceError(true);
+      }
       setStep("error");
       toastError(error.message);
     },
