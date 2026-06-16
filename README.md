@@ -4,6 +4,8 @@
 
 > "정확한 변환"이 아닌 **"특징을 반영한 기니피그 프로필 캐릭터 생성기"** — SNS 프로필, 카카오톡 프로필 등에 활용할 수 있는 캐릭터 이미지를 만들어 줍니다.
 
+**서비스 주소:** [https://ginini.k1my3ch4n.xyz](https://ginini.k1my3ch4n.xyz)
+
 ## 기술 스택
 
 - **Framework**: Next.js 16 (App Router) — SSR + API Route 일체형
